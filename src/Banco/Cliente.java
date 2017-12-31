@@ -2,6 +2,7 @@ package Banco;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class Cliente extends Persona {
     protected float saldo;
@@ -12,6 +13,7 @@ public class Cliente extends Persona {
         super(nombre, dni);
         this.saldo = saldo;
         this.esPremium = false;
+        this.paquetesAcciones = new HashSet<PaqueteDeAcciones>();
     }
 
     // Este constructor esta para poder ser llamado desde la clase hija 'ClientePremium'
@@ -29,13 +31,27 @@ public class Cliente extends Persona {
         return this.esPremium;
     }
 
-
-
-
+    public HashSet<PaqueteDeAcciones> getPaquetesAcciones() {
+        return paquetesAcciones;
+    }
 
     public String toString (){
-        //faltan añadir las acciones entre saldo y acciones
-            return "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo+ "    |||| Categoria: NO Premium"+"\n";
+        String cadena = null;
+
+        if(paquetesAcciones.size()==0)
+            cadena = "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo+ "    |||| Categoria: NO Premium"+ "    ||||Paquetes de Acciones: NO tiene"+ "\n";
+
+        else {
+
+            cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    |||| Categoria: NO Premium" + "    ||||Paquetes de Acciones:" + "\n" ;
+            Iterator iterador = paquetesAcciones.iterator();
+            while (iterador.hasNext()){
+                PaqueteDeAcciones paquete = (PaqueteDeAcciones) iterador.next();
+                cadena = cadena + paquete.toString() +"\n";
+            }
+        }
+        return cadena;
+
     }
 
     @Override

@@ -21,6 +21,8 @@ public class InterfazDeUsuario {
     private float saldo;
     private float valorActualEmpresa;
     private String path;
+    private float cantidadMaxAInvertir;
+    private int numTitulosAVender;
     // -FIN VARIABLES
 
     //ESPACIO RESERVADO PARA CONSTRUCTORES
@@ -62,6 +64,14 @@ public class InterfazDeUsuario {
 
     public String getPath() {
         return path;
+    }
+
+    public float getCantidadMaxAInvertir() {
+        return cantidadMaxAInvertir;
+    }
+
+    public int getNumTitulosAVender() {
+        return numTitulosAVender;
     }
 
     // -FIN GETTERS
@@ -114,7 +124,7 @@ public class InterfazDeUsuario {
                             System.out.println("El nombre debe contener caracteres válidos; no números, no acentos, solo letras desde a-z o A-Z ");
                             intentos = intentos - 1;
                             System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
-                            System.out.print("Nombre empresa: ");
+                            System.out.print("Nombre: ");
                             datos = leeTeclado.leeDatos();
 
                         } else {
@@ -234,7 +244,7 @@ public class InterfazDeUsuario {
 
     /*Nombre método: leeNumeroDecimalTeclado
       Entradas: ninguna
-      Salidas: double (numero introducido por teclado)
+      Salidas: float (numero introducido por teclado)
       Excepciones: IntentsLimitAchieveException
       Descripción: utiliza el objeto escaner de la clase para leer de teclado un número. Si el número es no positivo y se superan el límite de intentos se lanza una excepción.
       */
@@ -255,6 +265,32 @@ public class InterfazDeUsuario {
             }
 
             throw new IntentsLimitAchieveException("Se ha superado el límite de veces que el usuario puede introducir una opción no válida");
+
+    }
+
+    /*Nombre método: leeNumeroEnteroTeclado
+      Entradas: ninguna
+      Salidas: int (numero introducido por teclado)
+      Excepciones: IntentsLimitAchieveException
+      Descripción: utiliza el objeto escaner de la clase para leer de teclado un número. Si el número es no positivo y se superan el límite de intentos se lanza una excepción.
+      */
+    private float leeNumeroEnteroTeclado() throws IntentsLimitAchieveException {
+        float numero;
+        int intentos;
+        intentos = INTENTOS;
+        while (intentos > 1) {
+            numero = Float.valueOf(leeTeclado.leeDatos()).floatValue();
+            if (numero <= 0) {
+                intentos = intentos - 1;
+                System.out.println("El numero debe ser mayor que cero;  no números negativos ni cero");
+                System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                System.out.print("Inserte valor: ");
+
+            }
+            return (int) numero;
+        }
+
+        throw new IntentsLimitAchieveException("Se ha superado el límite de veces que el usuario puede introducir una opción no válida");
 
     }
 
@@ -285,7 +321,7 @@ public class InterfazDeUsuario {
         System.out.println("12.- Realizar copia de seguridad");
         System.out.println("13.- Restaurar copia de seguridad");
         System.out.println("----------------- OPERACIONES --------------------");
-        System.out.println("14.- Solicitar copia de acciones");
+        System.out.println("14.- Solicitar compra de acciones");
         System.out.println("15.- Solicitar venta de acciones");
         System.out.println("16.- Solicitar actualización de valores");
         System.out.println("------------------- BROKER -----------------------");
@@ -323,7 +359,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: ninguna
-      Descripción: solo imprime por pantalla un mensaje relacionado con la consulata que se desea realizar
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void muestraClientesBanco() {
         System.out.println("------OPCIÓN 1 SELECCIONADA: MUESTRA CLIENTES BANCO-----");
@@ -335,7 +371,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: nada
-      Descripción: solo imprime por pantalla un mensaje relacionado con la consulata que se desea realizar
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void muestraEmpresasBanco() {
         System.out.println("------OPCIÓN 2 SELECCIONADA: MUESTRA EMPRESAS BOLSA-----");
@@ -347,7 +383,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: IntentsLimitAchieveException
-      Descripción: cambia el valor de los atributos de la clase llamados: nombreEmpresa y valorActualEmpresa, através de la solicitud por teclado de datos al usuario.
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void altaClienteBanco() throws IntentsLimitAchieveException {
         System.out.println("------OPCIÓN 3 SELECCIONADA: AÑADIR CLIENTE A BANCO------");
@@ -367,7 +403,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: IntentsLimitAchieveException
-      Descripción: cambia el valor de los atributos de la clase llamados: nombreClientes, através de la solicitud por teclado de datos al usuario.
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void bajaClienteBanco() throws IntentsLimitAchieveException {
         System.out.println("------OPCIÓN 4 SELECCIONADA: ELIMINAR CLIENTE BANCO------");
@@ -382,7 +418,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: ninguna
-      Descripción: solo imprime por pantalla un mensaje relacionado con la consulata que se desea realizar
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void hazCopiaSeguridadBanco()throws IntentsLimitAchieveException {
         System.out.println("------OPCIÓN 5 SELECCIONADA: COPIA SEGURIDAD BANCO-----");
@@ -397,7 +433,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: ninguna
-      Descripción: solo imprime por pantalla un mensaje relacionado con la consulata que se desea realizar
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void restauraCopiaSeguridadBanco()throws IntentsLimitAchieveException  {
         System.out.println("------OPCIÓN 6 SELECCIONADA: RESTAURA COPIA SEGURIDAD BANCO-----");
@@ -412,7 +448,7 @@ public class InterfazDeUsuario {
       Entradas: dni cliente
       Salidas: nada
       Excepciones:
-      Descripción: Promociona a un cleinte ya existente a premium asignandole a un gestor
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void promocionaPremium() throws IntentsLimitAchieveException {
         System.out.println("------OPCIÓN 7 SELECCIONADA: MEJORAR CLIENTE A PREMIUM------");
@@ -427,7 +463,7 @@ public class InterfazDeUsuario {
       Entradas: dni cliente
       Salidas: nada
       Excepciones:
-      Descripción: Promociona a un cleinte ya existente a premium asignandole a un gestor
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void consultaValores() throws IntentsLimitAchieveException{
         System.out.println("------OPCIÓN 8 SELECCIONADA: SOLICITA RECOMEDACIÓN DE INVERSIÓN------");
@@ -442,7 +478,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: IntentsLimitAchieveException
-      Descripción: cambia el valor de los atributos de la clase llamados: nombreEmpresa y valorActualEmpresa, através de la solicitud por teclado de datos al usuario.
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void altaEmpresaBolsa() throws IntentsLimitAchieveException {
         System.out.println("------OPCIÓN 9 SELECCIONADA: AÑADIR EMPRESA A BOLSA------");
@@ -459,7 +495,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: IntentsLimitAchieveException
-      Descripción: cambia el valor de los atributos de la clase llamados: nombreEmpresa, através de la solicitud por teclado de datos al usuario.
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void bajaEmpresaBolsa() throws IntentsLimitAchieveException {
         System.out.println("------OPCIÓN 10 SELECCIONADA: ELIMINAR EMPRESA BOLSA------");
@@ -474,7 +510,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: IntentsLimitAchieveException
-      Descripción: cambia el valor de los atributos de la clase llamados: nombreEmpresa, através de la solicitud por teclado de datos al usuario.
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void actualizaValores() {
         System.out.println("------OPCIÓN 11 SELECCIONADA: ACTUALIZA VALORES------");
@@ -486,7 +522,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: ninguna
-      Descripción: solo imprime por pantalla un mensaje relacionado con la consulata que se desea realizar
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void hazCopiaSeguridadBolsa() throws IntentsLimitAchieveException {
         System.out.println("------OPCIÓN 12 SELECCIONADA: COPIA SEGURIDAD BOLSA-----");
@@ -501,7 +537,7 @@ public class InterfazDeUsuario {
       Entradas: ninguna
       Salidas: ninguna
       Excepciones: ninguna
-      Descripción: solo imprime por pantalla un mensaje relacionado con la consulata que se desea realizar
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void restauraCopiaSeguridadBolsa() throws IntentsLimitAchieveException {
 
@@ -512,6 +548,40 @@ public class InterfazDeUsuario {
         System.out.print("      Path fichero: ");//6 espacios
         this.path = this.leeCadenaTextoTeclado("opcionPath");
     }
+
+    /*Nombre método: solicitaCompraDeAcciones(OPCION 14)
+      Entradas: ninguna
+      Salidas: ninguna
+      Excepciones: ninguna
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
+      */
+    public void solicitaCompraDeAcciones() throws IntentsLimitAchieveException {
+
+        System.out.println("------OPCIÓN 14 SELECCIONADA: SOLICITAR COMPRA DE ACCIONES-----");
+        System.out.println();
+        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.print("Dni cliente: ");
+        dni = this.leeCadenaTextoTeclado("opcionDNI");
+        System.out.println();
+        System.out.print("Nombre empresa de la que dessae comprar acciones: ");//6 espacios
+        this.nombreEmpresa = this.leeCadenaTextoTeclado("opcionNombre");
+        System.out.print("Cantidad MAX. que desea invertir");
+        this.cantidadMaxAInvertir = this.leeNumeroEnteroTeclado();
+    }
+
+    /*Nombre método: muestraOperacionesPendientes(OPCION 17)
+      Entradas: ninguna
+      Salidas: ninguna
+      Excepciones: ninguna
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar.
+      */
+    public void muestraOperacionesPendientes(){
+        System.out.println("------OPCIÓN 17 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES-----");
+        System.out.println();
+    }
+
+
 
 
 }

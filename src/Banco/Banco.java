@@ -2,6 +2,7 @@ package Banco;
 
 
 import ExcepcionesPropias.*;
+import Mensajes.TipoOperacion;
 import Utilidades.Input;
 import Utilidades.Output;
 
@@ -14,7 +15,8 @@ public class Banco {
     private String nombre;
     private AgenteDeInversiones broker;
     private HashSet<Cliente> clientes;
-    private GestorDeInversiones gestor;
+    private AgenteDeInversiones gestor;
+    private int idOperacion = 0;
     //FIN ZONA VARIABLES
 
     //ZONA CONSTRUCTORES
@@ -70,7 +72,7 @@ public class Banco {
         this.broker = broker;
     }
 
-    public void setGestor(GestorDeInversiones gestor) {
+    public void setGestor(AgenteDeInversiones gestor) {
         this.gestor = gestor;
     }
 
@@ -239,17 +241,102 @@ public class Banco {
                 System.out.println("El cliente no es Premium");
             } else {
                 String nombreGestorRecomendacion = gestor.consultaDeInversiones();
-                if (nombreGestorRecomendacion!="1"){
+                if (nombreGestorRecomendacion != "1") {
                     System.out.println("Actualización finalizada con éxito");
                     System.out.println("El nombre de la empresa que mayor variación ha tenido es: " + gestor.consultaDeInversiones());
 
-                 }
+                }
             }
         } else {
             System.out.println("El cliente no existe");
 
         }
     }
+
+
+//ZONA DE OPERACIONES
+
+    /*Nombre método: compraAcciones
+      Entradas: String dniCliente, String nombreEmpresa, float cantidadMaxAInvertir
+      Salidas: nada
+      Excepciones:
+      Descripción: Envia al broker las peticiones de venta si todo el cliente cumple los requisitos(cliente pretenece al banco, el saldo del cleinte es superior a la cantidad que desea invertir).
+      */
+
+    public void compraAcciones(String dniCliente, String nombreEmpresa, float cantidadMaxAInvertir) {
+        boolean encontrado = false;
+        Cliente cliente = new Cliente("ssss", dniCliente, 2);
+        if (!clientes.contains(cliente)) {
+            System.out.println("El cliente con dni: " + dniCliente + " no es cliente de este banco");
+        } else {
+            Iterator iterador = clientes.iterator(); // creo un objeto Iterator para recorrer la coleccion
+            while (iterador.hasNext() && !encontrado) {
+                Cliente cliente1 = (Cliente) iterador.next();
+                if (cliente1.equals(cliente)) {
+                    encontrado = true;
+                    cliente = cliente1;
+                }
+            }
+            if (cliente.getSaldo() < cantidadMaxAInvertir) {
+                System.out.println("El cliente con dni: " + dniCliente + " no tiene saldo suficiente." + "Saldo actual cliente: " + cliente.getSaldo());
+            } else {
+                // Hay que restarle al saldo del cleinte la cantidad que desea a invertir ya que aunque no se haya ejecutado aun la orden de compra, de esta forma evitamos que el cleinte pueda invertir con dinero que no tiene. Si la orden luego es rechazada enonces se le devolvera a restaurar el saldo original
+                broker.añadePeticionCompraALaListaDeOperacionesPendientesDelBorker(idOperacion + 1, cliente.getNombre(), dniCliente, nombreEmpresa, TipoOperacion.COMPRA, cantidadMaxAInvertir);
+
+            }
+
+        }
+    }
+
+    /*Nombre método: ventaAcciones
+      Entradas: String dniCliente, String nombreEmpresa, float cantidadMaxAInvertir
+      Salidas: nada
+      Excepciones:
+      Descripción: Envia al broker las peticiones de venta si todo el cliente cumple los requisitos(cliente pretenece al banco, tieen acciones de la empresa que intenta vender y el numero de titulos que quiere vender es inferior o igual al numero de titulos que posee en su paquete de acciones).
+      */
+
+    public void ventaAcciones(String dniCliente, String nombreEmpresa, int numTitulosAComprar) {
+        boolean encontrado = false;
+        Cliente cliente = new Cliente("ssss", dniCliente, 2);
+        if (!clientes.contains(cliente)) {
+            System.out.println("El cliente con dni: " + dniCliente + " no es cliente de este banco");
+        } else {
+            Iterator iterador = clientes.iterator(); // creo un objeto Iterator para recorrer la coleccion
+            while (iterador.hasNext() && !encontrado) {
+                Cliente cliente1 = (Cliente) iterador.next();
+                if (cliente1.equals(cliente)) {
+                    encontrado = true;
+                    cliente = cliente1;
+                }
+            }
+            boolean encontrado1 = false;
+            PaqueteDeAcciones paqueteDeAcciones1 = new PaqueteDeAcciones(1,1,nombreEmpresa);
+            Iterator iterador1 = cliente.getPaquetesAcciones().iterator(); // creo un objeto Iterator para recorrer la coleccion
+            while (iterador.hasNext() && !encontrado1) {//recorro los paquetes de acciones del cliente para comprobar dos cosas: que tiene un paquete de la empresa de la que iintenta vender titulos y que el numero de acciones que posee de dicha empresa es mayor o igual que el número de acciones que intenta vender
+                PaqueteDeAcciones paqueteDeAcciones = (PaqueteDeAcciones) iterador1.next();
+                if (paqueteDeAcciones.getNombreEmpresa().equals(nombreEmpresa)) {
+                    encontrado1 = true;
+                    paqueteDeAcciones1 = paqueteDeAcciones;
+                }
+            }
+            if (!encontrado1) { // el cliente no posse ningun paquete de acciones con la empresa especificada
+                System.out.println("El cliente con dni: " + dniCliente + " no tiene en su cartera de inversiones acciones de la empresa: "+ nombreEmpresa);
+
+            }
+            else {//el cliente si posee un paquete de acciones con el nombre de empresa que ha proporcionado. Entonces ahora compruebo que el numero de titulos que tiene el cliente en el paquete de acciones asociado a dicha empresa es igual o superior al numero de titulos que quiere vender
+                if (paqueteDeAcciones1.getNumTitulos() < numTitulosAComprar) {
+                    System.out.println("El cliente con dni: " + dniCliente + " esta intentando vender una cantidad de acciones superior al numero de acciones que posse es su paquete de acciones. El número de acciones que posee el cliente de la empresa: "+ paqueteDeAcciones1.getNombreEmpresa()+" es: "+ paqueteDeAcciones1.getNumTitulos()+" títulos" );
+                }
+                else{// todo bien
+                    broker.añadePeticionVentaALaListaDeOperacionesPendientesDelBorker(idOperacion + 1, cliente.getNombre(), dniCliente, nombreEmpresa, TipoOperacion.VENTA, numTitulosAComprar);
+                }
+            }
+        }
+    }
+
+
+//FIN ZONA DE OPERACIONES
+
 }
 
 

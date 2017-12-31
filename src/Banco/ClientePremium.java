@@ -1,5 +1,7 @@
 package Banco;
 
+import java.util.Iterator;
+
 public class ClientePremium extends Cliente {// Esta clase permite a un cliente normal hacerle premium
     private String nombreGestorDeInversiones;
 
@@ -24,8 +26,21 @@ public class ClientePremium extends Cliente {// Esta clase permite a un cliente 
 
     @Override
     public String toString() {
-        //faltan añadir las acciones entre saldo y acciones
-         return "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo + "    ||||Categoria: Premium " +"    ||||Nombre Gestor: "+nombreGestorDeInversiones ;
+        String cadena;
+
+        if(paquetesAcciones.size()==0)
+            cadena = "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo + "    ||||Categoria: Premium " +"    ||||Nombre Gestor: "+nombreGestorDeInversiones + "    ||||Paquetes de Acciones: NO tiene"+ "\n";
+
+        else {
+
+            cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    ||||Categoria: Premium " +"    ||||Nombre Gestor: "+nombreGestorDeInversiones + "    ||||Paquetes de Acciones:" + "\n" ;
+            Iterator iterador = paquetesAcciones.iterator();
+            while (iterador.hasNext()){
+                PaqueteDeAcciones paquete = (PaqueteDeAcciones) iterador.next();
+                cadena = cadena + paquete.toString() +"\n";
+            }
+        }
+        return cadena;
     }
 }
 

@@ -19,13 +19,13 @@ public class Main {
 
             BolsaDeValores bolsa = new BolsaDeValores ("Bolsa Española");//Creamos un objeto de tipo BolsaDeValores.
             Banco banco = new Banco ("Banco Bilbao Vizcaya");//Creamos un banco
-            AgenteDeInversiones broker = new AgenteDeInversiones("Jhon Templeton","123456789");//Creamo un objeto de tipo AgenteDeInversion
+            AgenteDeInversiones broker = new AgenteDeInversiones("Jhon Templeton","123456789",bolsa,"broker");//Creamo un objeto de tipo AgenteDeInversion que sera un broker
             banco.setBroker(broker);//Se lo asignamos al banco
-            GestorDeInversiones gestor = new GestorDeInversiones("Elon James", "123456785", bolsa);
+            AgenteDeInversiones gestor = new AgenteDeInversiones("Elon James", "123456785", bolsa,"gestor");//Creamo un objeto de tipo AgenteDeInversion que sera un gestor de inversiones
             banco.setGestor(gestor);
 
 
-            Simulador simula = new Simulador(interfazUsusario,bolsa,banco); // Creamos un objeto de tipo Simulador y utilizamos el constructor que recibe como parmatros de entrada un objeto de tipo InterfazDeUsuario y un objeto de tipo BolsaDeValores9
+            Simulador simula = new Simulador(interfazUsusario,bolsa,banco,broker); // Creamos un objeto de tipo Simulador y utilizamos el constructor que recibe como parmatros de entrada un objeto de tipo InterfazDeUsuario y un objeto de tipo BolsaDeValores9
             simula.principal();// Llamamos al metodo principal() de la clase Simulador.
 
 

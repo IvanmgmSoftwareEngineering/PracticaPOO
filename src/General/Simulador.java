@@ -17,6 +17,7 @@ public class Simulador {
     private Banco banco;
     private int eleccion;
     private int constructorUtilizado;
+    private AgenteDeInversiones broker;
 
     public Simulador() {
         this.constructorUtilizado = 0;
@@ -55,11 +56,12 @@ public class Simulador {
         this.constructorUtilizado =6;
     }
 
-    public Simulador(InterfazDeUsuario menuYEleccion, BolsaDeValores bolsa, Banco banco) {
+    public Simulador(InterfazDeUsuario menuYEleccion, BolsaDeValores bolsa, Banco banco, AgenteDeInversiones broker) {
         interfaz = menuYEleccion;
         this.bolsa = bolsa;
         this.banco = banco;
         this.constructorUtilizado = 7;
+        this.broker= broker;
     }
 
     public void principal() throws ClassNotFoundException,IOException, BancoNoTieneGestor,ObjetoInterfazDeUsuarioNoPasadoConstructorSimulador,ClassCastException, IntentsLimitAchieveException, ObjetoEscannerNoPasadoConstructorInterfazDeUsuario {
@@ -125,9 +127,11 @@ public class Simulador {
                             System.out.println("Restauración realizada con exito.");
                         }
                         catch (FileNotFoundException fnfe) {
+
                             System.out.println("La ruta indicada no existe.");
                         }
                         catch (IOException ioe) {
+                            ioe.getStackTrace();
                             throw new IOException("Ruta correcta pero otro error de E/S");
                         }
                         System.out.println();
@@ -214,6 +218,9 @@ public class Simulador {
                         break;
 
                     case 14:    //SOLICITAR COMPRA DE ACCIONES
+                        interfaz.solicitaCompraDeAcciones();
+                        banco.compraAcciones(interfaz.getDni(),interfaz.getNombreEmpresa(),interfaz.getCantidadMaxAInvertir());
+
                         break;
 
                     case 15:    //SOLICITAR VENTA DE ACCIONES
@@ -223,6 +230,8 @@ public class Simulador {
                         break;
 
                     case 17:    //IMPRIMIR OPERACIONES PENDIENTES
+                        interfaz.muestraOperacionesPendientes();
+                        broker.muestraOperacionesPendientes();
                         break;
 
                     case 18:    //EJECUTAR OPERACIONES PENDIENTES
