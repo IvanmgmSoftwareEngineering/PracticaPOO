@@ -15,7 +15,13 @@ public class MensajeCompra extends Mensaje{
         this.cantidadMaximaAInvertir = cantidadMaximaAInvertir;
     }
 
+    public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente) {
+        super(idOperacion, nombreCliente, dniCliente);
+    }
 
+    public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente, TipoOperacion tipoOperacion) {
+        super(idOperacion, nombreCliente, dniCliente,tipoOperacion);
+    }
 
 
     public float getCantidadMaximaAInvertir() {

@@ -6,10 +6,13 @@ import java.io.Serializable;
 
 public class Empresa implements Serializable{
     private String nombre;
-    private float valorTituloActual;
-    private float valorTituloPrevio;
+    private double valorTituloActual;
+    private double valorTituloPrevio;
 
-    public Empresa(String nombre, float valorTituloActual) {
+    public Empresa() {
+    }
+
+    public Empresa(String nombre, double valorTituloActual) {
         this.nombre = nombre;
         this.valorTituloActual = valorTituloActual;
         this.valorTituloPrevio = valorTituloActual;
@@ -19,11 +22,11 @@ public class Empresa implements Serializable{
         return nombre;
     }
 
-    public float getValorTituloActual() {
+    public double getValorTituloActual() {
         return this.valorTituloActual;
     }
 
-    public float getValorTituloPrevio() {
+    public double getValorTituloPrevio() {
         return valorTituloPrevio;
     }
 
@@ -31,16 +34,16 @@ public class Empresa implements Serializable{
         this.nombre = nombre;
     }
 
-    public void setValorTituloActual(float valorTituloActual) {
+    public void setValorTituloActual(double valorTituloActual) {
         this.valorTituloActual = valorTituloActual;
     }
 
-    public void setValorTituloPrevio(float valorTituloPrevio) {
+    public void setValorTituloPrevio(double valorTituloPrevio) {
         this.valorTituloPrevio = valorTituloPrevio;
     }
 
 
-    public float calculaVariacion()  {
+    public double calculaVariacion()  {
 
         if(valorTituloPrevio == 0){
             return 0;

@@ -212,6 +212,7 @@ public class Simulador {
                             System.out.println("La ruta indicada no existe.");
                         }
                         catch (IOException ioe) {
+                            ioe.getStackTrace();
                             throw new IOException("Ruta correcta pero otro error de E/S");
                         }
                         System.out.println();
@@ -235,6 +236,9 @@ public class Simulador {
                         break;
 
                     case 18:    //EJECUTAR OPERACIONES PENDIENTES
+                        interfaz.ejecutaPeticionesDeAcciones();
+                        broker.ejecutaPeticionesDeAcciones();
+                        banco.actualizaEstadoClientes();//A partir de los resultados de las opraciones almacenadas en la lista opracionesRealizadas del broker tenemos que actualizar el/los paquete/s de acciones del cliente
                         break;
                 }
                 System.out.println();

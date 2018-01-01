@@ -21,6 +21,7 @@ public class Cliente extends Persona {
         super(nombre, dni);
         this.saldo = saldo;
         this.esPremium = esPremium;
+        this.paquetesAcciones = new HashSet<PaqueteDeAcciones>();
     }
 
     public float getSaldo() {
@@ -33,6 +34,18 @@ public class Cliente extends Persona {
 
     public HashSet<PaqueteDeAcciones> getPaquetesAcciones() {
         return paquetesAcciones;
+    }
+
+    public void setSaldo(float saldo) {
+        this.saldo = saldo;
+    }
+
+    public void setEsPremium(boolean esPremium) {
+        this.esPremium = esPremium;
+    }
+
+    public void setPaquetesAcciones(HashSet<PaqueteDeAcciones> paquetesAcciones) {
+        this.paquetesAcciones = paquetesAcciones;
     }
 
     public String toString (){

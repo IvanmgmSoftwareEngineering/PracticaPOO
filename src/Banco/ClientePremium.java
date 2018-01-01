@@ -1,5 +1,6 @@
 package Banco;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class ClientePremium extends Cliente {// Esta clase permite a un cliente normal hacerle premium

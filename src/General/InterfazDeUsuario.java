@@ -566,6 +566,7 @@ public class InterfazDeUsuario {
         System.out.println();
         System.out.print("Nombre empresa de la que dessae comprar acciones: ");//6 espacios
         this.nombreEmpresa = this.leeCadenaTextoTeclado("opcionNombre");
+        System.out.println();
         System.out.print("Cantidad MAX. que desea invertir");
         this.cantidadMaxAInvertir = this.leeNumeroEnteroTeclado();
     }
@@ -580,6 +581,21 @@ public class InterfazDeUsuario {
         System.out.println("------OPCIÓN 17 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES-----");
         System.out.println();
     }
+
+    /*Nombre método: ejecutaPeticionesDeAcciones(OPCION 18)
+      Entradas: ninguna
+      Salidas: ninguna
+      Excepciones: ninguna
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar.
+      */
+    public void ejecutaPeticionesDeAcciones(){
+        System.out.println("------OPCIÓN 18 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES-----");
+        System.out.println();
+        System.out.println("Ejecutando...");
+        System.out.println();
+    }
+
+
 
 
 

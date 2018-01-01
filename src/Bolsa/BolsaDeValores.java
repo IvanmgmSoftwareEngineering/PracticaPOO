@@ -3,8 +3,12 @@ package Bolsa;
 import java.io.*;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import Banco.Cliente;
+import Mensajes.TipoOperacion;
 import Utilidades.*;
 import General.*;
+import sun.misc.FloatingDecimal;
 
 import javax.swing.plaf.synth.SynthTextAreaUI;
 
@@ -153,12 +157,42 @@ public class BolsaDeValores {
         System.out.println("Restaurando...");
         System.out.println();
         empresas.clear();//borramos toda la lista antes de cargar desde disco la nueva lista de la que dispondremos
-        do{
-            empresa = deserializa.leerEmpresa();
-            empresas.add(empresa);
-        } while (empresa !=null) ;
-        deserializa.cerrar();
-        empresas.remove(null);
+        try {
+            do {
+                empresa = deserializa.leerEmpresa();
+                empresas.add(empresa);
+            } while (empresa != null);
+            deserializa.cerrar();
+            empresas.remove(null);
+        }
+
+
+        catch (InterruptedIOException iioe){
+            System.out.println("Interrupcion de tipo InterruptedIOException");
+        }
+        catch (InvalidClassException ost){
+            System.out.println("Interrupcion de tipo InvalidClassException");
+
+            /* Thrown when the Serialization runtime detects one of the following problems with a Class.
+                The serial version of the class does not match that of the class descriptor read from the stream
+                The class contains unknown datatypes
+                The class does not have an accessible no-arg constructor
+            */
+        }
+        catch (StreamCorruptedException ost){
+            System.out.println("Interrupcion de tipo InvalidClassException");
+        }
+
+        catch (ObjectStreamException ost){
+            System.out.println("Interrupcion de tipo ObjectStreamException");
+        }
+        catch ( EOFException eofe){
+            System.out.println("Interrupcion de tipo EOFException");
+        }
+
+        catch (IOException ioe){
+            System.out.println("Interrupcion de tipo IOException: es decir ninguna de las capturas antes");
+        }
         //Comprobamos que no hay empresas en la lista que tengan un valor de titulo actual de cero y si lo tiene la quitamos de la lista.
         Iterator iterador = empresas.iterator();
         while (iterador.hasNext()) {
@@ -168,6 +202,141 @@ public class BolsaDeValores {
             }
         }
     }
+
+    /*Nombre método: recepcioncadenaCodificadaCompraDesdeElBroker
+      Entradas: String con la cadena codificade desde el broker
+      Salidas: String con una cadena codificada de respuesta con el resultado de la operación y los valores necesarios en funcion del tipo de operacion
+      Excepciones:
+      Descripción: Dada la cadena codificada recibida desde el broker realiza:  decodifica, geenera un string de respuesta codificado (para ello tiene que hacer las operaciones de mirar el precio de la accion y realizar las operaciones necesarias y por ultimo actualiza los valores de la bolsa en funcion de si la orden era de compra o de venta
+      */
+
+    public String recepcioncadenaCodificadaCompraDesdeElBroker(String cadenaCompraCodificada) {
+        //Variables para decodificar
+        String idOperacionDecodificado = null;
+        String nombreClienteDecodificado = null;
+        String dniClienteDecodificado = null;
+        String nombreEmpresaDecodificado = null;
+        String cantidadMaximaAInvertir = null;
+        //Variables para codificar cadena de respuesta
+        boolean efectuada;
+        double numAccionesCompradas;
+        double precioDeAccion;
+        double dineroSobrante;
+
+
+        //DECODIFICAMOS LA CADENA
+        int i = 0;
+        char caracter;
+        //Decodificamos el IdOperacion
+        caracter = cadenaCompraCodificada.charAt(i);
+        while (caracter != '|'){
+            idOperacionDecodificado = idOperacionDecodificado + caracter;
+            i = i+1;
+            caracter = cadenaCompraCodificada.charAt(i);
+        }
+        i = i+1;
+        //Decodificamos el nombre del cliente
+        caracter = cadenaCompraCodificada.charAt(i);
+        while (caracter != '|'){
+            nombreClienteDecodificado = nombreClienteDecodificado + caracter;
+            i = i+1;
+            caracter = cadenaCompraCodificada.charAt(i);
+        }
+        i = i+1;
+        //Decodificamos el DNI del cliente
+        caracter = cadenaCompraCodificada.charAt(i);
+        while (caracter != '|'){
+            dniClienteDecodificado = dniClienteDecodificado + caracter;
+            i = i+1;
+            caracter = cadenaCompraCodificada.charAt(i);
+        }
+        i = i+1;
+        //Decodificamos el nombreEmpresa
+        caracter = cadenaCompraCodificada.charAt(i);
+        while (caracter != '|'){
+            nombreEmpresaDecodificado = nombreEmpresaDecodificado + caracter;
+            i = i+1;
+            caracter = cadenaCompraCodificada.charAt(i);
+        }
+        i = i+1;
+        //Decodificamos el cantidadMaximaAInvertir
+        caracter = cadenaCompraCodificada.charAt(i);
+        while (caracter != '|'){
+            cantidadMaximaAInvertir = cantidadMaximaAInvertir + caracter;
+            i = i+1;
+            caracter = cadenaCompraCodificada.charAt(i);
+        }
+
+        //FIN DECODIFICAR LA CADENA
+
+        //primero comprobamos si la empresa de la que se intentan adquirir tituos esta en la bolsa, sino esta la operacion no se efectura
+        boolean encontrado = false;
+        Empresa empresaAComprar = new Empresa(nombreEmpresaDecodificado,1);//Solo me intera el nombre, el valor actual es cualquiera
+        Iterator iterador = empresas.iterator(); // creo un objeto Iterator para recorrer la coleccion
+        while (iterador.hasNext() && !encontrado) {
+            Empresa empresa = (Empresa) iterador.next();
+            if(empresa.equals(empresaAComprar)) {
+                empresaAComprar = empresa;
+                encontrado = true;
+            }
+        }
+
+        if(!encontrado){ // sino la empresa no esta en la bolsa se devuelbe una cadena de respuesta codificada al broker con resultado false
+            return idOperacionDecodificado + "|" + nombreClienteDecodificado + "|" + dniClienteDecodificado + "|" + "false" + "|";
+        }
+
+        else{ // si la empresa esta en la bolsa entonces compramos
+
+            //1º Obtenemos el valor del titulo actual de la empresa para saber cuantos titulos podemos comprar
+            precioDeAccion = empresaAComprar.getValorTituloActual();
+
+            double maxCantidadAInvertir = Float.parseFloat(cantidadMaximaAInvertir);
+            double resto;
+
+            resto =  maxCantidadAInvertir/empresaAComprar.getValorTituloActual() - Math.floor(maxCantidadAInvertir/empresaAComprar.getValorTituloActual());
+
+            numAccionesCompradas = Math.floor(maxCantidadAInvertir/empresaAComprar.getValorTituloActual()); // auqnue numAccionesCompradas sea de tipo doule lo redondeamos al entero inferior
+
+            dineroSobrante = resto * empresaAComprar.getValorTituloActual();
+
+            //2º Modificamos el valor de la accion: hacemos que suba ya que la operacion es de compra
+
+            empresaAComprar.setValorTituloPrevio(empresaAComprar.getValorTituloActual());
+            empresaAComprar.setValorTituloActual(empresaAComprar.getValorTituloActual() + (numAccionesCompradas * empresaAComprar.getValorTituloActual() * 0.01)); //hacemos que la accion suba un 1 % del valor actual de la accion por cada accion que compramos
+
+            //3º Devolvemos a la bolsa la empresaAcomprar con los valores aumentados debido a la compra
+
+            Iterator iterador1 = empresas.iterator(); // creo un objeto Iterator para recorrer la coleccion
+            encontrado = false;
+            while (iterador.hasNext() && !encontrado) {
+                Empresa empresa = (Empresa) iterador.next();
+                if (empresa.equals(empresaAComprar)) {
+                    empresas.remove(empresa);
+                    empresas.add(empresaAComprar);
+                    encontrado = true;
+                }
+            }
+
+            //4º DEVOLVEMOS LA CADENA CODIFICADA AL BROKER
+
+            return idOperacionDecodificado + "|" + nombreClienteDecodificado + "|" + dniClienteDecodificado + "|" + "true"+ "|" + numAccionesCompradas + "|" + precioDeAccion+ "|" + dineroSobrante;
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+    }
+
+
+
 }
 
 

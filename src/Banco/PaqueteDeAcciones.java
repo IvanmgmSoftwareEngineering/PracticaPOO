@@ -4,11 +4,11 @@ package Banco;
 public class PaqueteDeAcciones {
 
     private int numTitulos;
-    private float valorActualTitulo;
+    private double valorActualTitulo;
     private String nombreEmpresa;
 
 
-    public PaqueteDeAcciones(int numTitulos, float valorActualTitulo, String nombreEmpresa) {
+    public PaqueteDeAcciones(int numTitulos, double valorActualTitulo, String nombreEmpresa) {
         this.numTitulos = numTitulos;
         this.valorActualTitulo = valorActualTitulo;
         this.nombreEmpresa = nombreEmpresa;
@@ -18,7 +18,7 @@ public class PaqueteDeAcciones {
         return numTitulos;
     }
 
-    public float getValorActualTitulo() {
+    public double getValorActualTitulo() {
         return valorActualTitulo;
     }
 
@@ -30,7 +30,7 @@ public class PaqueteDeAcciones {
         this.numTitulos = numTitulos;
     }
 
-    public void setValorActualTitulo(float valorActualTitulo) {
+    public void setValorActualTitulo(double valorActualTitulo) {
         this.valorActualTitulo = valorActualTitulo;
     }
 
@@ -38,7 +38,7 @@ public class PaqueteDeAcciones {
         this.nombreEmpresa = nombreEmpresa;
     }
 
-    public float calculaValorPaquete(){
+    public double calculaValorPaquete(){
 
         return this.valorActualTitulo*this.numTitulos;
 

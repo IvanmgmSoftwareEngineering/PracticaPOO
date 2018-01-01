@@ -1,5 +1,6 @@
 package Mensajes;
 
+
 public class Mensaje {
     protected int idOperacion;
     protected String nombreCliente;

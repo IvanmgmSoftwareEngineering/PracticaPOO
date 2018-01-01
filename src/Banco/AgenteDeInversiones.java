@@ -3,8 +3,10 @@ package Banco;
 import Bolsa.BolsaDeValores;
 import Bolsa.Empresa;
 import Mensajes.*;
+import com.sun.tools.corba.se.idl.constExpr.BooleanOr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class AgenteDeInversiones extends Persona {
@@ -43,6 +45,10 @@ public class AgenteDeInversiones extends Persona {
         return resultadosOperaciones;
     }
 
+    public BolsaDeValores getBolsa() {
+        return bolsa;
+    }
+
     //FIN ZONA DE GETTERS
 
     //ZONA DE METODOS PRIVADOS
@@ -67,7 +73,7 @@ public class AgenteDeInversiones extends Persona {
             return "1";
         } else {
             Empresa empresa1 = null;
-            float variacionMaxima = -100;
+            double variacionMaxima = -100;
             Iterator iterador = bolsa.getEmpresas().iterator(); // creo un objeto Iterator para recorrer la coleccion
             while (iterador.hasNext()) {
                 Empresa empresa = (Empresa) iterador.next();
@@ -81,46 +87,137 @@ public class AgenteDeInversiones extends Persona {
         }
     }
 
-     /*Nombre método: compraDeAcciones
+     /*Nombre método: ejecutaPeticionesDeAcciones
           Entradas: nada
           Salidas: nada
           Excepciones:
-          Descripción: Crea una cadena codificada para la compra de acciones
+          Descripción: ejecuta la peticiones que tieen el blorker en la lista de peticiones pendientes generando una cadena codificada que envia a la bolsa
           */
 
-    public void ejecutaPeticionesCompraDeAcciones() {
+    public void ejecutaPeticionesDeAcciones() {
+        String cadenaCompraRespuestaCodificada = null;
         Iterator iterador = operacionesPendientes.iterator(); // creo un objeto Iterator para recorrer la coleccion
         while (iterador.hasNext()) {
             Mensaje mensaje = (Mensaje) iterador.next();
 
-            if (mensaje.getTipoOperacion() == TipoOperacion.COMPRA) { // OPERACION DE COMPRA
+            // OPERACION DE COMPRA
+
+            if (mensaje.getTipoOperacion() == TipoOperacion.COMPRA) {
                 MensajeCompra mensajeCompra = (MensajeCompra) mensaje;
-                if (!bolsa.getEmpresas().contains(mensaje.getNombreEmpresa())) { // Si la bolsa no tiene a la empresa de la que se quieren adquirir titúlos el resultado de la opracion será NO EFECTUADO: motivo "LA EMPRESA NO EXISTE"
-                    Mensaje mensajeResuestaCompra = new MensajeRespuestaCompra(mensajeCompra.getIdOperacion(),mensajeCompra.getNombreCliente(),mensajeCompra.getDniCliente(),mensajeCompra.getNombreEmpresa(), mensajeCompra.getTipoOperacion(), false);
-                    resultadosOperaciones.add(mensajeResuestaCompra);
-                } else {//La empresa si esta en la bolsa
+                String cadenaCompraCodificada;
+                //1º// Llamo al metodo de esta misma clase que construye una cadena de texto codificada con el formato que impone el enunciado. Notar que no hace falta crearse un metodo para codificar y decodificar ya que lo tenemos creado en la clase Mensaje. En cambio en la bolsa si sera necesario crearse metodos para codificar y decodificar porque la bolsa no ve a la clase mensaje
+                cadenaCompraCodificada = mensajeCompra.codificar();
 
-                    // Llamo al metodo de esta misma clase que construye una cadena de texto codificada con el formato que impone el enunciado. Nota hace falta crearse un metodo para codificar y decodificar ya que lo tenemos creado en la clase Mensaje. En cambio en la bolsa si sera necesario crearse metodos para codificar y decodificar porque la bolsa no ve a la clase mensaje
-                        // Envio cadena a la bolsa. El metodo de la bolsa encargado de recpcionar las cadenas codificadas tiene que :
-                        //  1º decodificar la cadena
-                        //  2º generar una cadena codificada de respuesta
-                        //  3º aumentar el valor de la accion de la empresa acorde a un valor proporcional al numero de acciones que compro y al valor actual de la accion. (ojo se debe cambiar valor actual y valor previo)
-                        //  4º devolver una sadena codificada String
-                        // Decoddificar cadena codificada recibida desde la bolsa y crear un objeto de tipo MensajeRespuestaCompra
-                        // Añadir el mensajeRespuesCompra a la lista resultadosOperaciones
+                //2º// Envio cadena a la bolsa. LLamo desde aqui al metodo de la bolsa encargado de recpcionar las cadenas codificadas que tiene que :
+                //  1º decodificar la cadena
+                //  2º generar una cadena codificada de respuesta
+                //  3º aumentar el valor de la accion de la empresa acorde a un valor proporcional al numero de acciones que compro y al valor actual de la accion. (ojo se debe cambiar valor actual y valor previo)
+                //  4º devolver una cadena codificada de respuesta String
+                cadenaCompraRespuestaCodificada = bolsa.recepcioncadenaCodificadaCompraDesdeElBroker(cadenaCompraCodificada);
 
 
+                //3º// Decodificar cadena codificada recibida desde la bolsa y crear un objeto de tipo MensajeRespuestaCompra
+
+                //Variables para decodificar
+                String idOperacionDecodificado = null;
+                String nombreClienteDecodificado = null;
+                String dniClienteDecodificado = null;
+                String resultadoOperaciondecodificado = null;
+                String numAccionesCompradas= null;
+                String precioDeAccion= null;
+                String dineroSobrante= null;
+
+                int i = 0;
+                char caracter;
+                //DECODIFICAMOS RESPUESTA DE COMPRA DEDE LA BOLSA
+                caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                while (caracter != '|'){
+                    idOperacionDecodificado = idOperacionDecodificado + caracter;
+                    i = i+1;
+                    caracter = cadenaCompraRespuestaCodificada.charAt(i);
                 }
-            } else if (mensaje.getTipoOperacion() == TipoOperacion.VENTA) {// OPERACION DE COMPRA
+                i = i+1;
+                //Decodificamos el nombre del cliente
+                caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                while (caracter != '|'){
+                    nombreClienteDecodificado = nombreClienteDecodificado + caracter;
+                    i = i+1;
+                    caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                }
+                //Decodificamos el DNI del cliente
+                caracter = cadenaCompraCodificada.charAt(i);
+                while (caracter != '|'){
+                    dniClienteDecodificado = dniClienteDecodificado + caracter;
+                    i = i+1;
+                    caracter = cadenaCompraCodificada.charAt(i);
+                }
+                i = i+1;
+                //Decodificamos el resultado de la opracion
+                caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                while (caracter != '|'){
+                    resultadoOperaciondecodificado = resultadoOperaciondecodificado + caracter;
+                    i = i+1;
+                    caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                }
+                i = i+1;
+                //Decodificamos el numero de acciones compradas
+                caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                while (caracter != '|'){
+                    numAccionesCompradas = numAccionesCompradas + caracter;
+                    i = i+1;
+                    caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                }
+                i = i+1;
+                //Decodificamos el precio de la accion comprada
+                caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                while (caracter != '|'){
+                    precioDeAccion = precioDeAccion + caracter;
+                    i = i+1;
+                    caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                }
+                i = i+1;
+                //Decodificamos el dinero sobrante de la operacion de compra
+                caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                while (caracter != '|'){
+                    dineroSobrante = dineroSobrante + caracter;
+                    i = i+1;
+                    caracter = cadenaCompraRespuestaCodificada.charAt(i);
+                }
+
+                // FIN DECODIFICAMOS RESPUESTA DE COMPRA DEDE LA BOLSA
+
+                //Transformamos los String de la decodificacion a los tipos adecuados y cremoa un objeto de tipo mensaje que añadiremos a la lista de operaciones realizadas
+                int idOperacion = Integer.parseInt(idOperacionDecodificado);
+                Boolean efectuada = Boolean.parseBoolean(resultadoOperaciondecodificado);
+                int numeroAccionesCompradas = Integer.parseInt(numAccionesCompradas);
+                double precioAccionComprada = Double.parseDouble(precioDeAccion);
+                double sobranteDinero = Double.parseDouble(dineroSobrante);
+
+
+                if(resultadoOperaciondecodificado.equals("false")){ //si el resultado de la operacion es false es porque la empresa de la que se intentan comprar acciones no se encuentra en la bolsa. Entonces genero un mensajeActualizacionRespuesta con el constructor que solo recibe idOperacion, nombreCleinte, dniCliente y el resultado de la oprracion
+                    Mensaje mensajeResuestaCompra = new MensajeRespuestaCompra(idOperacion,nombreClienteDecodificado ,dniClienteDecodificado ,false);
+                    resultadosOperaciones.add(mensajeResuestaCompra);
+                }
+
+                // 4º// Añadir el mensajeRespuesCompra a la lista resultadosOperaciones
+                else{//el resultado de la operacion es true
+                    Mensaje mensajeRespuestaCompra = new MensajeRespuestaCompra(idOperacion,nombreClienteDecodificado,dniClienteDecodificado,TipoOperacion.COMPRA,efectuada,numeroAccionesCompradas,precioAccionComprada,sobranteDinero);
+                    resultadosOperaciones.add(mensajeRespuestaCompra);
+                }
+
+                // FIN OPERACION DE COMPRA
+
+                // OPERACION DE VENTA
+
+            } else if (mensaje.getTipoOperacion() == TipoOperacion.VENTA) {
                 MensajeVenta mensajeVenta = (MensajeVenta) mensaje;
                 if (!bolsa.getEmpresas().contains(mensaje.getNombreEmpresa())) { // Si la bolsa no tiene a la empresa de la que se quieren vender titúlos el resultado de la opracion será NO EFECTUADO: motivo "LA EMPRESA NO EXISTE"
-                    Mensaje mensajeResuestaVenta = new MensajeRespuestaVenta(mensajeVenta.getIdOperacion(),mensaje.getNombreCliente(),mensaje.getDniCliente(),mensajeVenta.getNombreEmpresa(), mensajeVenta.getTipoOperacion(), false);
+                    Mensaje mensajeResuestaVenta = new MensajeRespuestaVenta(mensajeVenta.getIdOperacion(), mensaje.getNombreCliente(), mensaje.getDniCliente(), mensajeVenta.getNombreEmpresa(), mensajeVenta.getTipoOperacion(), false);
                     resultadosOperaciones.add(mensajeResuestaVenta);
                 } else {//La empresa si esta en la bolsa
 
 
-                    // Llamo al metodo de esta misma clase que construye una cadena de texto codificada con el formato que impone el enunciado. Nota hace falta crearse un metodo para codificar y decodificar ya que lo tenemos creado en la clase Mensaje. En cambio en la bolsa si sera necesario crearse metodos para codificar y decodificar porque la bolsa no ve a la clase mensaje
-
+                    // Llamo al metodo de esta misma clase que construye una cadena de texto codificada con el formato que impone el enunciado. Notar que no hace falta crearse un metodo para codificar y decodificar ya que lo tenemos creado en la clase Mensaje. En cambio en la bolsa si sera necesario crearse metodos para codificar y decodificar porque la bolsa no ve a la clase mensaje
                     // Envio cadena a la bolsa. El metodo de la bolsa encargado de recpcionar las cadenas codificadas tiene que :
                     //  1º decodificar la cadena
                     //  2º generar una cadena codificada de respuesta
@@ -130,20 +227,38 @@ public class AgenteDeInversiones extends Persona {
                     // Añadir el mensajeRespuesCompra a la lista resultadosOperaciones
 
                 }
+
+                //FIN OPERACION DE VENTA
+
+                // OPERACION DE ACTULIZACION
+
+            } else if (mensaje.getTipoOperacion() == TipoOperacion.ACTUALIZACION) {// OPERACION DE ACTULIZACION
+                MensajeActualizacion mensajeActualizacion = (MensajeActualizacion) mensaje;
+                Iterator iterador1 = mensajeActualizacion.getEmpresasQueSeQuierenActualizar().iterator(); // creo un objeto Iterator para recorrer la coleccion de empresas que se quieren actualizar
+                HashSet<Empresa> empresasActualizadas = new HashSet<Empresa>();
+                while (iterador1.hasNext()) {
+                    Empresa empresaParaActualizar = (Empresa) iterador1.next();
+                    Iterator iterador2 = bolsa.getEmpresas().iterator(); // creo un objeto Iterator para recorrer la coleccion de empresas que existen en la bolsa
+                    while (iterador2.hasNext()) {
+                        Empresa empresaBolsa = (Empresa) iterador1.next();
+                        if (empresaBolsa.equals(empresaParaActualizar)) {
+                            empresaParaActualizar.setValorTituloActual(empresaBolsa.getValorTituloActual());
+                            empresaParaActualizar.setValorTituloPrevio(empresaBolsa.getValorTituloPrevio());
+                            empresasActualizadas.add(empresaParaActualizar);
+                        }
+                    }
+                }
+                Mensaje mensajeResuestaActualizacion = new MensajeRespuestaActualizacion(mensajeActualizacion.getIdOperacion(), mensajeActualizacion.getNombreCliente(), mensajeActualizacion.getDniCliente(),mensajeActualizacion.getTipoOperacion(),true,empresasActualizadas);
+                resultadosOperaciones.add(mensajeResuestaActualizacion);
             }
 
-            else if (mensaje.getTipoOperacion() == TipoOperacion.ACTUALIZACION) {// OPERACION DE ACTULIZACION
+            // FIN OPERACION DE ACTULIZACION
 
-
-
-
-
-            }
+            operacionesPendientes.clear(); // borramos toda la lista de opraciones pendientes
         }
-        operacionesPendientes.clear();
-
-
     }
+
+
 
         /*Nombre método: añadePeticionCompraALaListaDeOperacionesPendientesDelBorker
           Entradas: int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, float cantidadMaxAInvertir
@@ -152,8 +267,8 @@ public class AgenteDeInversiones extends Persona {
           Descripción: Añade una solicitud de compra la lista de operaciones pendientes del broker
           */
 
-    public void añadePeticionCompraALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, float cantidadMaxAInvertir) {
-        MensajeCompra peticionCompra = new MensajeCompra(idOperacion, nombreCliente, dniCliente, nombreEmpresa, tipoOperacion, cantidadMaxAInvertir);
+    public void añadePeticionCompraALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa,  float cantidadMaxAInvertir) {
+        MensajeCompra peticionCompra = new MensajeCompra(idOperacion, nombreCliente, dniCliente, nombreEmpresa, TipoOperacion.COMPRA, cantidadMaxAInvertir);
         operacionesPendientes.add(peticionCompra);
     }
 
@@ -164,12 +279,31 @@ public class AgenteDeInversiones extends Persona {
           Descripción: Añade una solicitud de venta a la lista de operaciones pendientes del broker
           */
 
-    public void añadePeticionVentaALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, int numTitulosAVender) {
+    public void añadePeticionVentaALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, int numTitulosAVender) {
 
-        MensajeVenta peticionVenta = new MensajeVenta(idOperacion,nombreCliente,dniCliente,nombreEmpresa,tipoOperacion,numTitulosAVender);
+        MensajeVenta peticionVenta = new MensajeVenta(idOperacion,nombreCliente,dniCliente,nombreEmpresa,TipoOperacion.VENTA,numTitulosAVender);
         operacionesPendientes.add(peticionVenta);
     }
 
+     /*Nombre método: añadePeticionActualizacionALaListaDeOperacionesPendientesDelBorker
+          Entradas: int idOperacion,String nombreCliente , String dniCliente)
+          Salidas: nada
+          Excepciones:
+          Descripción: Añade una solicitud de actualizacion a la lista de operaciones pendientes del broker
+          */
+
+    public void añadePeticionActualizacionALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, HashSet<Empresa> empresasQueSeQuierenActualizar) {
+
+        MensajeActualizacion peticionActualizacion = new MensajeActualizacion(idOperacion,nombreCliente,dniCliente, TipoOperacion.ACTUALIZACION, empresasQueSeQuierenActualizar);
+        operacionesPendientes.add(peticionActualizacion);
+    }
+
+    /*Nombre método: muestraOperacionesPendientes
+          Entradas: nada
+          Salidas: nada
+          Excepciones:
+          Descripción: Muestra las operaciones pendientes
+          */
 
     public void muestraOperacionesPendientes(){
 

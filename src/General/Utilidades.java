@@ -9,27 +9,27 @@ import java.util.GregorianCalendar;
 
 public class Utilidades {
 
-    public float generaAleatorio () {
-        float resultado = -1;
+    public double generaAleatorio () {
+        double resultado = -1;
         while (resultado == -1) {
 
             Random generaNumeroAleatorio1 = new Random();
             Random generaNumeroAleatorio2 = new Random();
 
-            float num1 = generaNumeroAleatorio1.nextInt(100);
-            float num2 = generaNumeroAleatorio2.nextInt(100);
+            double num1 = generaNumeroAleatorio1.nextInt(100);
+            double num2 = generaNumeroAleatorio2.nextInt(100);
 
             resultado = (((num1 + num2) - 100)/100);
         }
         return resultado;
     }
 
-    public static String formatoDinero(float numero) { // Método estático: no hace falta crear un objeto para llamarla
+    public static String formatoDinero(double numero) { // Método estático: no hace falta crear un objeto para llamarla
         DecimalFormat formateador = new DecimalFormat("0000000.00");
         return formateador.format(numero);
     }
 
-    public static String formatoEntero(float numero) {
+    public static String formatoEntero(double numero) {
         DecimalFormat formateador = new DecimalFormat("00000000");
         return formateador.format(numero);
     }
