@@ -36,7 +36,7 @@ public class MensajeVenta extends Mensaje {
     }
 
     public String codificar() {
-        return this.cadenaIdentificador() + "|" + this.nombreCliente + "|" + this.dniCliente + "|" + this.nombreEmpresa + "|" + this.cadenaNumAcciones();
+        return this.cadenaIdentificador() + "|" + this.nombreCliente + "|" + this.dniCliente + "|" + this.nombreEmpresa + "|" + this.cadenaNumAcciones()+"|";
     }
 
     @Override

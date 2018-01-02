@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class Cliente extends Persona {
-    protected float saldo;
+    protected double saldo;
     protected  boolean esPremium;
     protected HashSet<PaqueteDeAcciones> paquetesAcciones;
 
-    public Cliente(String nombre, String dni, float saldo) {
+    public Cliente(String nombre, String dni, double saldo) {
         super(nombre, dni);
         this.saldo = saldo;
         this.esPremium = false;
@@ -17,14 +17,21 @@ public class Cliente extends Persona {
     }
 
     // Este constructor esta para poder ser llamado desde la clase hija 'ClientePremium'
-    public Cliente(String nombre, String dni, float saldo,boolean esPremium) {
+    public Cliente(String nombre, String dni, double saldo,boolean esPremium) {
         super(nombre, dni);
         this.saldo = saldo;
         this.esPremium = esPremium;
         this.paquetesAcciones = new HashSet<PaqueteDeAcciones>();
     }
 
-    public float getSaldo() {
+    public Cliente(String nombre, String dni, double saldo,boolean esPremium,HashSet<PaqueteDeAcciones> paquetesAcciones) {
+        super(nombre, dni);
+        this.saldo = saldo;
+        this.esPremium = esPremium;
+        this.paquetesAcciones = paquetesAcciones;
+    }
+
+    public double getSaldo() {
         return this.saldo;
     }
 
@@ -36,7 +43,7 @@ public class Cliente extends Persona {
         return paquetesAcciones;
     }
 
-    public void setSaldo(float saldo) {
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
 
@@ -56,14 +63,16 @@ public class Cliente extends Persona {
 
         else {
 
-            cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    |||| Categoria: NO Premium" + "    ||||Paquetes de Acciones:" + "\n" ;
+            cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    |||| Categoria: NO Premium" + "    ||||Paquetes de Acciones: " + "\n" ;
             Iterator iterador = paquetesAcciones.iterator();
+            int i=1;
             while (iterador.hasNext()){
                 PaqueteDeAcciones paquete = (PaqueteDeAcciones) iterador.next();
-                cadena = cadena + paquete.toString() +"\n";
+                cadena = cadena + "---------->Paquete "+i+": "+paquete.toString() +"\n";
+                i=i+1;
             }
         }
-        return cadena;
+        return  ""+cadena;
 
     }
 

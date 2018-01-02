@@ -3,18 +3,18 @@ package Banco;
 
 public class PaqueteDeAcciones {
 
-    private int numTitulos;
+    private double numTitulos;
     private double valorActualTitulo;
     private String nombreEmpresa;
 
 
-    public PaqueteDeAcciones(int numTitulos, double valorActualTitulo, String nombreEmpresa) {
+    public PaqueteDeAcciones(double numTitulos, double valorActualTitulo, String nombreEmpresa) {
         this.numTitulos = numTitulos;
         this.valorActualTitulo = valorActualTitulo;
         this.nombreEmpresa = nombreEmpresa;
     }
 
-    public int getNumTitulos() {
+    public double getNumTitulos() {
         return numTitulos;
     }
 
@@ -26,7 +26,7 @@ public class PaqueteDeAcciones {
         return nombreEmpresa;
     }
 
-    public void setNumTitulos(int numTitulos) {
+    public void setNumTitulos(double numTitulos) {
         this.numTitulos = numTitulos;
     }
 
@@ -46,7 +46,7 @@ public class PaqueteDeAcciones {
 
     @Override
     public String toString() {
-        return " Nombre Empresa= " + this.nombreEmpresa  + ", Valor Titulo= "+ this.valorActualTitulo+ ", Valor Paquete" + this.calculaValorPaquete() ;
+        return " Nombre Empresa= " + this.nombreEmpresa  + ", Valor Titulo= "+ this.valorActualTitulo+ ", Valor Paquete= " + this.calculaValorPaquete() ;
     }
 
     @Override

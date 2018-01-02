@@ -279,15 +279,29 @@ public class InterfazDeUsuario {
         int intentos;
         intentos = INTENTOS;
         while (intentos > 1) {
-            numero = Float.valueOf(leeTeclado.leeDatos()).floatValue();
-            if (numero <= 0) {
-                intentos = intentos - 1;
-                System.out.println("El numero debe ser mayor que cero;  no números negativos ni cero");
-                System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
-                System.out.print("Inserte valor: ");
+            try {
+                numero = Float.valueOf(leeTeclado.leeDatos()).floatValue();
+                if (numero <= 0) {
+                    intentos = intentos - 1;
+                    System.out.println("El numero debe ser mayor que cero;  no números negativos ni cero");
+                    System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                    System.out.print("Inserte valor: ");
 
+                }
+                return (int) numero;
             }
-            return (int) numero;
+            catch (java.lang.NumberFormatException nfe ){
+                if (intentos > 1) {
+                    intentos = intentos - 1;
+                    System.out.println("El numero debe ser mayor que cero;  no números negativos ni cero");
+                    System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                    System.out.print("Inserte valor: ");
+                }
+                else{
+                    throw new IntentsLimitAchieveException("Se ha superado el límite de veces que el usuario puede introducir una opción no válida");
+
+                }
+            }
         }
 
         throw new IntentsLimitAchieveException("Se ha superado el límite de veces que el usuario puede introducir una opción no válida");
@@ -567,7 +581,7 @@ public class InterfazDeUsuario {
         System.out.print("Nombre empresa de la que dessae comprar acciones: ");//6 espacios
         this.nombreEmpresa = this.leeCadenaTextoTeclado("opcionNombre");
         System.out.println();
-        System.out.print("Cantidad MAX. que desea invertir");
+        System.out.print("Cantidad MAX. que desea invertir: ");
         this.cantidadMaxAInvertir = this.leeNumeroEnteroTeclado();
     }
 

@@ -3,14 +3,14 @@ package Mensajes;
 import General.Utilidades;
 
 public class MensajeCompra extends Mensaje{
-    protected float cantidadMaximaAInvertir;
+    protected double cantidadMaximaAInvertir;
 
 
     public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion) {//Constructor para ser llamado desde MensajeRespuestaCompra
         super(idOperacion, nombreCliente, dniCliente, nombreEmpresa, tipoOperacion);
     }
 
-    public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, float cantidadMaximaAInvertir) {
+    public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, double cantidadMaximaAInvertir) {
         super(idOperacion, nombreCliente, dniCliente, nombreEmpresa, tipoOperacion);
         this.cantidadMaximaAInvertir = cantidadMaximaAInvertir;
     }
@@ -18,13 +18,13 @@ public class MensajeCompra extends Mensaje{
     public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente) {
         super(idOperacion, nombreCliente, dniCliente);
     }
-
-    public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente, TipoOperacion tipoOperacion) {
+    public MensajeCompra(int idOperacion, String nombreCliente, String dniCliente, TipoOperacion tipoOperacion,Double cantidadMaximaAInvertir) {
         super(idOperacion, nombreCliente, dniCliente,tipoOperacion);
+        this.cantidadMaximaAInvertir = cantidadMaximaAInvertir;
     }
 
 
-    public float getCantidadMaximaAInvertir() {
+    public double getCantidadMaximaAInvertir() {
         return cantidadMaximaAInvertir;
     }
 
@@ -33,7 +33,7 @@ public class MensajeCompra extends Mensaje{
     }
 
     public String codificar() {
-        return this.idOperacion + "|" + this.nombreCliente + "|" + this.dniCliente + "|" + this.nombreEmpresa + "|" + this.cadenaInversionMaxima();
+        return this.idOperacion + "|" + this.nombreCliente + "|" + this.dniCliente + "|" + this.nombreEmpresa + "|" + this.cadenaInversionMaxima()+"|";
     }
 
     @Override

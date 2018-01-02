@@ -8,6 +8,7 @@ import Utilidades.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InvalidClassException;
 
 
 public class Simulador {
@@ -128,11 +129,10 @@ public class Simulador {
                         }
                         catch (FileNotFoundException fnfe) {
 
-                            System.out.println("La ruta indicada no existe.");
+                            System.out.println("EEROR: La ruta indicada no existe.");
                         }
                         catch (IOException ioe) {
-                            ioe.getStackTrace();
-                            throw new IOException("Ruta correcta pero otro error de E/S");
+                           ioe.getStackTrace();
                         }
                         System.out.println();
                         break;
@@ -209,18 +209,26 @@ public class Simulador {
                             System.out.println("Restauración realizada con exito.");
                         }
                         catch (FileNotFoundException fnfe) {
-                            System.out.println("La ruta indicada no existe.");
+                            System.out.println("EEROR: La ruta indicada no existe.");
                         }
+
                         catch (IOException ioe) {
-                            ioe.getStackTrace();
-                            throw new IOException("Ruta correcta pero otro error de E/S");
+
                         }
                         System.out.println();
                         break;
 
                     case 14:    //SOLICITAR COMPRA DE ACCIONES
-                        interfaz.solicitaCompraDeAcciones();
-                        banco.compraAcciones(interfaz.getDni(),interfaz.getNombreEmpresa(),interfaz.getCantidadMaxAInvertir());
+                        try {
+                            interfaz.solicitaCompraDeAcciones();
+                            banco.compraAcciones(interfaz.getDni(), interfaz.getNombreEmpresa(), interfaz.getCantidadMaxAInvertir());
+                        }
+                        catch(IntentsLimitAchieveException ile) {
+                            System.out.println("Se han superado el número de intentos permitidos");
+                            System.out.println();
+                        }
+
+
 
                         break;
 

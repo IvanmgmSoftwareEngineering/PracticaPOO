@@ -25,12 +25,12 @@ public class Utilidades {
     }
 
     public static String formatoDinero(double numero) { // Método estático: no hace falta crear un objeto para llamarla
-        DecimalFormat formateador = new DecimalFormat("0000000.00");
+        DecimalFormat formateador = new DecimalFormat("#######.##");
         return formateador.format(numero);
     }
 
     public static String formatoEntero(double numero) {
-        DecimalFormat formateador = new DecimalFormat("00000000");
+        DecimalFormat formateador = new DecimalFormat("#######");
         return formateador.format(numero);
     }
 

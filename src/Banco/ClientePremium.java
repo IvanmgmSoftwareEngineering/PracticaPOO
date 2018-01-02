@@ -17,7 +17,7 @@ public class ClientePremium extends Cliente {// Esta clase permite a un cliente 
     }
 
     public ClientePremium(Cliente clienteOrigen, String nombreGestorDeInversiones) {
-                super(clienteOrigen.nombre, clienteOrigen.dni, clienteOrigen.saldo,true);
+                super(clienteOrigen.nombre, clienteOrigen.dni, clienteOrigen.saldo,true,clienteOrigen.getPaquetesAcciones());
                 this.nombreGestorDeInversiones = nombreGestorDeInversiones;
     }
 
@@ -25,23 +25,26 @@ public class ClientePremium extends Cliente {// Esta clase permite a un cliente 
         return nombreGestorDeInversiones;
     }
 
-    @Override
-    public String toString() {
-        String cadena;
+
+    public String toString (){
+        String cadena = null;
 
         if(paquetesAcciones.size()==0)
-            cadena = "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo + "    ||||Categoria: Premium " +"    ||||Nombre Gestor: "+nombreGestorDeInversiones + "    ||||Paquetes de Acciones: NO tiene"+ "\n";
+            cadena = "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo+ "    ||||Categoria: Premium " +"    ||||Nombre Gestor: "+nombreGestorDeInversiones + "    ||||Paquetes de Acciones: NO tiene"+ "\n";
 
         else {
 
-            cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    ||||Categoria: Premium " +"    ||||Nombre Gestor: "+nombreGestorDeInversiones + "    ||||Paquetes de Acciones:" + "\n" ;
+            cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    ||||Categoria: Premium " +"    ||||Nombre Gestor: "+nombreGestorDeInversiones + "    ||||Paquetes de Acciones:" + "\n";
             Iterator iterador = paquetesAcciones.iterator();
+            int i=1;
             while (iterador.hasNext()){
                 PaqueteDeAcciones paquete = (PaqueteDeAcciones) iterador.next();
-                cadena = cadena + paquete.toString() +"\n";
+                cadena = cadena + "---------->Paquete "+i+": "+paquete.toString() +"\n";
+                i=i+1;
             }
         }
-        return cadena;
+        return  ""+cadena;
+
     }
 }
 

@@ -34,7 +34,7 @@ public class MensajeRespuestaVenta extends MensajeVenta {
     }
 
     public String codificar() {
-        if (efectuada)         return this.cadenaIdentificador()+ "|" +this.nombreCliente+ "|" +this.dniCliente+ "|" + this.cadenaOperacionRealizada()+ "|" + this.cadenaPrecioDeAccion() + "|" + this.cadenaBeneficioTotal();
+        if (efectuada)         return this.cadenaIdentificador()+ "|" +this.nombreCliente+ "|" +this.dniCliente+ "|" + this.cadenaOperacionRealizada()+ "|" + this.cadenaPrecioDeAccion() + "|" + this.cadenaBeneficioTotal()+"|";
         else  return this.cadenaIdentificador()+ "|" +this.nombreCliente+ "|" +this.dniCliente+ "|" + this.cadenaOperacionRealizada()+  "|" +" La empresa no existe";
 
     }
