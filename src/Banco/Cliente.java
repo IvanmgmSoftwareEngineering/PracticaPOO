@@ -1,6 +1,5 @@
 package Banco;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -59,20 +58,20 @@ public class Cliente extends Persona {
         String cadena = null;
 
         if(paquetesAcciones.size()==0)
-            cadena = "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo+ "    |||| Categoria: NO Premium"+ "    ||||Paquetes de Acciones: NO tiene"+ "\n";
+            /*cadena=*/return  "Nombre Cliente: "+this.nombre + "  ||||  dni: "+this.dni +"  ||||Saldo: "+ this.saldo+ "    |||| Categoria: NO Premium"+ "    ||||Paquetes de Acciones: NO tiene"+ "\n";
 
         else {
 
-            cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    |||| Categoria: NO Premium" + "    ||||Paquetes de Acciones: " + "\n" ;
-            Iterator iterador = paquetesAcciones.iterator();
-            int i=1;
-            while (iterador.hasNext()){
-                PaqueteDeAcciones paquete = (PaqueteDeAcciones) iterador.next();
-                cadena = cadena + "---------->Paquete "+i+": "+paquete.toString() +"\n";
-                i=i+1;
+            /*cadena=*/return  "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    |||| Categoria: NO Premium" + "    ||||Paquetes de Acciones: " + "\n" + paquetesAcciones.toString() ;
+            //Iterator iterador = paquetesAcciones.iterator();
+            //int i=1;
+            //while (iterador.hasNext()){
+                //PaqueteDeAcciones paquete = (PaqueteDeAcciones) iterador.next();
+                //cadena = cadena + "---------->Paquete "+i+": "+paquete.toString() +"\n";
+                //i=i+1;
             }
-        }
-        return  ""+cadena;
+        //}
+        //return  ""+cadena;
 
     }
 

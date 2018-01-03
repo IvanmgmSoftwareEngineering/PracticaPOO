@@ -1,7 +1,9 @@
 package Banco;
 
 
-public class PaqueteDeAcciones {
+import java.io.Serializable;
+
+public class PaqueteDeAcciones implements Serializable {
 
     private double numTitulos;
     private double valorActualTitulo;
@@ -46,7 +48,7 @@ public class PaqueteDeAcciones {
 
     @Override
     public String toString() {
-        return " Nombre Empresa= " + this.nombreEmpresa  + ", Valor Titulo= "+ this.valorActualTitulo+ ", Valor Paquete= " + this.calculaValorPaquete() ;
+        return "-------------------"+"Paquete de acciones de la empresa = " + this.nombreEmpresa  + ", Valor Titulo = "+ this.valorActualTitulo+ ", Valor Paquete = " + this.calculaValorPaquete()+"----------"+"\n" ;
     }
 
     @Override

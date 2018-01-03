@@ -22,7 +22,7 @@ public class InterfazDeUsuario {
     private float valorActualEmpresa;
     private String path;
     private float cantidadMaxAInvertir;
-    private int numTitulosAVender;
+    private float numTitulosAVender;
     // -FIN VARIABLES
 
     //ESPACIO RESERVADO PARA CONSTRUCTORES
@@ -70,7 +70,7 @@ public class InterfazDeUsuario {
         return cantidadMaxAInvertir;
     }
 
-    public int getNumTitulosAVender() {
+    public float getNumTitulosAVender() {
         return numTitulosAVender;
     }
 
@@ -202,7 +202,9 @@ public class InterfazDeUsuario {
                             System.out.print("Dni cliente: ");
                             datos = leeTeclado.leeDatos();
                         }
-                        return datos;
+                        else {
+                            return datos;
+                        }
                     }
                     catch (StringIndexOutOfBoundsException siobe ){
                         System.out.println("ERROR: El dni debe contener 9 caracteres.");
@@ -358,12 +360,12 @@ public class InterfazDeUsuario {
         int intentos;
         intentos = INTENTOS;
         this.menu();
-        System.out.print("Inserte la opción deseada: ");
+        System.out.print(" Inserte la opción deseada: ");
         try {
             eleccion = this.leeCadenaTextoTeclado("opcionMenu");
 
         }catch (NullPointerException e) {
-            throw new ObjetoEscannerNoPasadoConstructorInterfazDeUsuario("La clase 'Interfaz Ususario' debe recibir un objeto de tipo 'Escanner' para funcionar correctamente");
+            throw new ObjetoEscannerNoPasadoConstructorInterfazDeUsuario(" La clase 'Interfaz Ususario' debe recibir un objeto de tipo 'Escanner' para funcionar correctamente");
         } catch (InputMismatchException e1){
 
         }
@@ -376,8 +378,10 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void muestraClientesBanco() {
-        System.out.println("------OPCIÓN 1 SELECCIONADA: MUESTRA CLIENTES BANCO-----");
-        System.out.println("A continuación le mostramos una lista con los clientes del banco: ");
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 1 SELECCIONADA: MUESTRA CLIENTES BANCO ---------");
+        System.out.println(" A continuación le mostramos una lista con los clientes del banco: ");
         System.out.println();
     }
 
@@ -388,8 +392,10 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void muestraEmpresasBanco() {
-        System.out.println("------OPCIÓN 2 SELECCIONADA: MUESTRA EMPRESAS BOLSA-----");
-        System.out.println("A continuación le mostramos una lista con las empresas de bolsa: ");
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 2 SELECCIONADA: MUESTRA EMPRESAS BOLSA ---------");
+        System.out.println(" A continuación le mostramos una lista con las empresas de bolsa: ");
         System.out.println();
     }
 
@@ -400,9 +406,11 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void altaClienteBanco() throws IntentsLimitAchieveException {
-        System.out.println("------OPCIÓN 3 SELECCIONADA: AÑADIR CLIENTE A BANCO------");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 3 SELECCIONADA: AÑADIR CLIENTE A BANCO ----------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
         System.out.print("      Nombre cliente: ");//6 espacios
         this.nombrePersona = this.leeCadenaTextoTeclado("opcionNombre");
@@ -420,10 +428,12 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void bajaClienteBanco() throws IntentsLimitAchieveException {
-        System.out.println("------OPCIÓN 4 SELECCIONADA: ELIMINAR CLIENTE BANCO------");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
-        System.out.print("Dni cliente: ");
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 4 SELECCIONADA: ELIMINAR CLIENTE BANCO ----------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.print("      Dni cliente: ");
         dni = this.leeCadenaTextoTeclado("opcionDNI");
 
     }
@@ -435,9 +445,11 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void hazCopiaSeguridadBanco()throws IntentsLimitAchieveException {
-        System.out.println("------OPCIÓN 5 SELECCIONADA: COPIA SEGURIDAD BANCO-----");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 5 SELECCIONADA: COPIA SEGURIDAD BANCO ---------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
         System.out.print("      Path fichero: ");//6 espacios
         this.path = this.leeCadenaTextoTeclado("opcionPath");
@@ -450,9 +462,11 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void restauraCopiaSeguridadBanco()throws IntentsLimitAchieveException  {
-        System.out.println("------OPCIÓN 6 SELECCIONADA: RESTAURA COPIA SEGURIDAD BANCO-----");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 6 SELECCIONADA: RESTAURA COPIA SEGURIDAD BANCO ---------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
         System.out.print("      Path fichero: ");//6 espacios
         this.path = this.leeCadenaTextoTeclado("opcionPath");
@@ -465,11 +479,13 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void promocionaPremium() throws IntentsLimitAchieveException {
-        System.out.println("------OPCIÓN 7 SELECCIONADA: MEJORAR CLIENTE A PREMIUM------");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
-        System.out.print("Dni cliente: ");
+        System.out.println(" ---------- OPCIÓN 7 SELECCIONADA: MEJORAR CLIENTE A PREMIUM ----------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.print("      Dni cliente: ");
         dni = this.leeCadenaTextoTeclado("opcionDNI");
     }
 
@@ -480,11 +496,13 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void consultaValores() throws IntentsLimitAchieveException{
-        System.out.println("------OPCIÓN 8 SELECCIONADA: SOLICITA RECOMEDACIÓN DE INVERSIÓN------");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
-        System.out.print("Dni cliente: ");
+        System.out.println(" ---------- OPCIÓN 8 SELECCIONADA: SOLICITA RECOMEDACIÓN DE INVERSIÓN ----------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.print("      Dni cliente: ");
         dni = this.leeCadenaTextoTeclado("opcionDNI");
     }
 
@@ -495,7 +513,9 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void altaEmpresaBolsa() throws IntentsLimitAchieveException {
-        System.out.println("------OPCIÓN 9 SELECCIONADA: AÑADIR EMPRESA A BOLSA------");
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 9 SELECCIONADA: AÑADIR EMPRESA A BOLSA ----------");
         System.out.println();
         System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
@@ -512,11 +532,13 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void bajaEmpresaBolsa() throws IntentsLimitAchieveException {
-        System.out.println("------OPCIÓN 10 SELECCIONADA: ELIMINAR EMPRESA BOLSA------");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
-        System.out.print("Nombre empresa: ");
+        System.out.println(" ---------- OPCIÓN 10 SELECCIONADA: ELIMINAR EMPRESA BOLSA ----------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.print("      Nombre empresa: ");
         this.nombreEmpresa = this.leeCadenaTextoTeclado("opcionNombre");
     }
 
@@ -527,7 +549,9 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void actualizaValores() {
-        System.out.println("------OPCIÓN 11 SELECCIONADA: ACTUALIZA VALORES------");
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 11 SELECCIONADA: ACTUALIZA VALORES ----------");
         System.out.println();
 
     }
@@ -539,9 +563,11 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void hazCopiaSeguridadBolsa() throws IntentsLimitAchieveException {
-        System.out.println("------OPCIÓN 12 SELECCIONADA: COPIA SEGURIDAD BOLSA-----");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 12 SELECCIONADA: COPIA SEGURIDAD BOLSA ---------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
         System.out.print("      Path fichero: ");//6 espacios
         this.path = this.leeCadenaTextoTeclado("opcionPath");
@@ -554,10 +580,11 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void restauraCopiaSeguridadBolsa() throws IntentsLimitAchieveException {
-
-        System.out.println("------OPCIÓN 13 SELECCIONADA: RESTAURA COPIA SEGURIDAD BOLSA-----");
         System.out.println();
-        System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.println(" -----------OPCIÓN 13 SELECCIONADA: RESTAURA COPIA SEGURIDAD BOLSA ---------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
         System.out.print("      Path fichero: ");//6 espacios
         this.path = this.leeCadenaTextoTeclado("opcionPath");
@@ -570,19 +597,61 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
       */
     public void solicitaCompraDeAcciones() throws IntentsLimitAchieveException {
-
-        System.out.println("------OPCIÓN 14 SELECCIONADA: SOLICITAR COMPRA DE ACCIONES-----");
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 14 SELECCIONADA: SOLICITAR COMPRA DE ACCIONES ---------");
         System.out.println();
         System.out.println("A continuación le solicitaremos los siguientes datos necesarios: ");
         System.out.println();
-        System.out.print("Dni cliente: ");
+        System.out.print("      Dni cliente: ");
         dni = this.leeCadenaTextoTeclado("opcionDNI");
         System.out.println();
-        System.out.print("Nombre empresa de la que dessae comprar acciones: ");//6 espacios
+        System.out.print("      Nombre empresa de la que dessae comprar acciones: ");//6 espacios
         this.nombreEmpresa = this.leeCadenaTextoTeclado("opcionNombre");
         System.out.println();
-        System.out.print("Cantidad MAX. que desea invertir: ");
+        System.out.print("      Cantidad MAX. que desea invertir: ");
         this.cantidadMaxAInvertir = this.leeNumeroEnteroTeclado();
+    }
+
+    /*Nombre método: solicitaVentaDeAcciones(OPCION 15)
+      Entradas: ninguna
+      Salidas: ninguna
+      Excepciones: ninguna
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar y pide los datos necesarios por teclado
+      */
+    public void solicitaVentaDeAcciones() throws IntentsLimitAchieveException {
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 15 SELECCIONADA: SOLICITAR VENTA DE ACCIONES ---------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.print("      Dni cliente: ");
+        dni = this.leeCadenaTextoTeclado("opcionDNI");
+        System.out.println();
+        System.out.print("      Nombre empresa de la que dessae vender acciones: ");//6 espacios
+        this.nombreEmpresa = this.leeCadenaTextoTeclado("opcionNombre");
+        System.out.println();
+        System.out.print("      Número de acciones que desea vender: ");
+        this.numTitulosAVender = this.leeNumeroEnteroTeclado();
+    }
+
+    /*Nombre método: actualizaValoresCliente(OPCION 16)
+      Entradas: ninguna
+      Salidas: ninguna
+      Excepciones: ninguna
+      Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar.
+      */
+    public void actualizaValoresCliente()throws IntentsLimitAchieveException{
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 16 SELECCIONADA: SOLICITAR ACTUALIZACIÓN DE VALORES ---------");
+        System.out.println();
+        System.out.println(" A continuación le solicitaremos los siguientes datos necesarios: ");
+        System.out.println();
+        System.out.print("      Dni cliente: ");
+        dni = this.leeCadenaTextoTeclado("opcionDNI");
+        System.out.println();
     }
 
     /*Nombre método: muestraOperacionesPendientes(OPCION 17)
@@ -592,7 +661,9 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar.
       */
     public void muestraOperacionesPendientes(){
-        System.out.println("------OPCIÓN 17 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES-----");
+        System.out.println();
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 17 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES ---------");
         System.out.println();
     }
 
@@ -603,9 +674,11 @@ public class InterfazDeUsuario {
       Descripción: solo imprime por pantalla un mensaje relacionado con la consulta que se desea realizar.
       */
     public void ejecutaPeticionesDeAcciones(){
-        System.out.println("------OPCIÓN 18 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES-----");
         System.out.println();
-        System.out.println("Ejecutando...");
+        System.out.println();
+        System.out.println(" ---------- OPCIÓN 18 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES ---------");
+        System.out.println();
+        System.out.println(" Ejecutando...");
         System.out.println();
     }
 

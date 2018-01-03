@@ -233,9 +233,25 @@ public class Simulador {
                         break;
 
                     case 15:    //SOLICITAR VENTA DE ACCIONES
+                        try {
+                            interfaz.solicitaVentaDeAcciones();
+                            banco.ventaAcciones(interfaz.getDni(), interfaz.getNombreEmpresa(), interfaz.getNumTitulosAVender());
+                        }
+                        catch(IntentsLimitAchieveException ile) {
+                            System.out.println("Se han superado el número de intentos permitidos");
+                            System.out.println();
+                        }
                         break;
 
                     case 16:    //SOLICITAR ACTUALIZACION DE VALORES DE LAS CARTERAS DE UN CLIENTE
+                        try {
+                            interfaz.actualizaValoresCliente();
+                            banco.actualizacionDeAccicones(interfaz.getDni());
+                        }
+                        catch ( IntentsLimitAchieveException ile){
+                            System.out.println("Se han superado el número de intentos permitidos");
+                            System.out.println();
+                        }
                         break;
 
                     case 17:    //IMPRIMIR OPERACIONES PENDIENTES

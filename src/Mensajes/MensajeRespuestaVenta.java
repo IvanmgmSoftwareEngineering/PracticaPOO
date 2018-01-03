@@ -6,19 +6,37 @@ import General.Utilidades;
 public class MensajeRespuestaVenta extends MensajeVenta {
 
     private boolean efectuada;
-    private float precioDeAccion;
-    private float beneficioTotal;
+    private double precioDeAccion;
+    private double beneficioTotal;
+    private double numAccionesVendidas;
 
     public MensajeRespuestaVenta(int idOperacion, String nombreCliente, String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, boolean efectuada) {
         super(idOperacion, nombreCliente, dniCliente, nombreEmpresa, tipoOperacion);
         this.efectuada = efectuada;
 
     }
-    public MensajeRespuestaVenta(int idOperacion, String nombreCliente, String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, int numTitulosAVender, boolean efectuada,float precioDeAccion,float beneficioTotal) {
-        super(idOperacion, nombreCliente, dniCliente, nombreEmpresa, tipoOperacion, numTitulosAVender);
+    public MensajeRespuestaVenta(int idOperacion, String nombreCliente, String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, boolean efectuada, double numAccionesVendidas,double precioDeAccion,double beneficioTotal) {
+        super(idOperacion, nombreCliente, dniCliente, nombreEmpresa, tipoOperacion, numAccionesVendidas);
         this.efectuada = efectuada;
         this.precioDeAccion=precioDeAccion;
         this.beneficioTotal = beneficioTotal;
+        this.numAccionesVendidas = numAccionesVendidas;
+    }
+
+    public boolean isEfectuada() {
+        return efectuada;
+    }
+
+    public double getPrecioDeAccion() {
+        return precioDeAccion;
+    }
+
+    public double getBeneficioTotal() {
+        return beneficioTotal;
+    }
+
+    public double getNumAccionesVendidas() {
+        return numAccionesVendidas;
     }
 
     private String cadenaOperacionRealizada() {
@@ -33,9 +51,10 @@ public class MensajeRespuestaVenta extends MensajeVenta {
         return Utilidades.formatoDinero(this.beneficioTotal);
     }
 
+
     public String codificar() {
         if (efectuada)         return this.cadenaIdentificador()+ "|" +this.nombreCliente+ "|" +this.dniCliente+ "|" + this.cadenaOperacionRealizada()+ "|" + this.cadenaPrecioDeAccion() + "|" + this.cadenaBeneficioTotal()+"|";
-        else  return this.cadenaIdentificador()+ "|" +this.nombreCliente+ "|" +this.dniCliente+ "|" + this.cadenaOperacionRealizada()+  "|" +" La empresa no existe";
+        else  return this.cadenaIdentificador()+ "|" +this.nombreCliente+ "|" +this.dniCliente+ "|" + this.cadenaOperacionRealizada()+  "|";
 
     }
 
