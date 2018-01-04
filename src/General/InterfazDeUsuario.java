@@ -18,11 +18,11 @@ public class InterfazDeUsuario {
     private String nombreEmpresa;
     private String nombrePersona;
     private String dni;
-    private float saldo;
-    private float valorActualEmpresa;
+    private double saldo;
+    private double valorActualEmpresa;
     private String path;
-    private float cantidadMaxAInvertir;
-    private float numTitulosAVender;
+    private double cantidadMaxAInvertir;
+    private double numTitulosAVender;
     // -FIN VARIABLES
 
     //ESPACIO RESERVADO PARA CONSTRUCTORES
@@ -46,7 +46,7 @@ public class InterfazDeUsuario {
         return nombreEmpresa;
     }
 
-    public float getValorActualEmpresa() {
+    public double getValorActualEmpresa() {
         return valorActualEmpresa;
     }
 
@@ -58,7 +58,7 @@ public class InterfazDeUsuario {
         return dni;
     }
 
-    public float getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
@@ -66,11 +66,11 @@ public class InterfazDeUsuario {
         return path;
     }
 
-    public float getCantidadMaxAInvertir() {
+    public double getCantidadMaxAInvertir() {
         return cantidadMaxAInvertir;
     }
 
-    public float getNumTitulosAVender() {
+    public double getNumTitulosAVender() {
         return numTitulosAVender;
     }
 

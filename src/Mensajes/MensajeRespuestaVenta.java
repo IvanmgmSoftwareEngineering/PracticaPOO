@@ -23,6 +23,11 @@ public class MensajeRespuestaVenta extends MensajeVenta {
         this.numAccionesVendidas = numAccionesVendidas;
     }
 
+    public MensajeRespuestaVenta(int identificador, String nombreCliente, String dniCliente, String nombreEmpresa,TipoOperacion tipoOperacion, double numTitulosAVender, boolean efectuada) {
+        super(identificador, nombreCliente, dniCliente, nombreEmpresa,tipoOperacion,numTitulosAVender);
+        this.efectuada = efectuada;
+    }
+
     public boolean isEfectuada() {
         return efectuada;
     }

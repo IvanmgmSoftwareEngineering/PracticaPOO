@@ -22,7 +22,7 @@ public class MensajeActualizacion extends Mensaje {
     public String toString() {
         //String cadena = null;
 
-         return "IDoperacion: "+this.idOperacion+ ", Tipo: "+ this.tipoOperacion+", Nombre Cliente: "+ this.nombreCliente + ", Dni Cliente: "+ this.dniCliente + ", Nombre Empresas que se quieren actualizar: "+"\n" ;
+         return "IDoperacion: "+this.idOperacion+ ", Tipo: "+ this.tipoOperacion+", Nombre Cliente: "+ this.nombreCliente + ", Dni Cliente: "+ this.dniCliente + ", Nombre Empresas que se quieren actualizar: "+"\n" + empresasQueSeQuierenActualizar.toString();
 
           /*  cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    |||| Categoria: NO Premium" + "    ||||Paquetes de Acciones:" + "\n" ;
             Iterator iterador = paquetesAcciones.iterator();

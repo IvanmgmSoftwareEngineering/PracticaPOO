@@ -496,10 +496,20 @@ public class BolsaDeValores {
             System.out.println();
             System.out.println(" 5º) La bolsa esta codificando la cadena de texto de respuesta de venta para enviar al broker...");
             System.out.println();
+            System.out.println(" ------------ Los datos a codificar son: ");
+            System.out.println();
+            System.out.println(" ---------------- ID Operacion = " + idOperacionDecodificado+"  ---- OK");
+            System.out.println(" ---------------- Nombre Cliente = " + nombreClienteDecodificado+"  ---- OK");
+            System.out.println(" ---------------- DNI Cliente = " + dniClienteDecodificado+"  ---- OK");
+            System.out.println(" ---------------- Resultado Operación =  " + efectuada+"  ---- OK");
+            System.out.println();
             System.out.println(" -------- Se ha terminado de codificar la cadena.");
             System.out.println();
             System.out.println(" -------- La cadena de texto codificada de respuesta de venta generada por la bolsa es: "+ idOperacionDecodificado + "|" + nombreClienteDecodificado + "|" + dniClienteDecodificado + "|" + efectuada + "|");
             System.out.println();
+            System.out.println("                                          "+ idOperacionDecodificado + "|" + nombreClienteDecodificado + "|" + dniClienteDecodificado + "|" + efectuada + "|"+"                                          ");
+            System.out.println();
+
 
             return idOperacionDecodificado + "|" + nombreClienteDecodificado + "|" + dniClienteDecodificado + "|" + "false" + "|";
         }
@@ -529,6 +539,7 @@ public class BolsaDeValores {
 
             //2º Modificamos el valor de la accion: hacemos que suba ya que la operacion es de compra
             System.out.println(" -------- La bolsa esta modificando el valor de la accion en la bolsa. En este caso como la operacion es de venta el valor de la acción disminuira un 1% con respecto a su valor actual");
+            System.out.println();
             System.out.println(" ------------ Valor acción en la bolsa antes de la venta = "+empresaAVender.getValorTituloActual());
             double valorModificado = empresaAVender.getValorTituloActual() - (numAccionesVendidas * empresaAVender.getValorTituloActual() * 0.01);
             System.out.println(" ------------ Valor acción en la bolsa después de la venta = "+valorModificado);
@@ -553,10 +564,22 @@ public class BolsaDeValores {
             System.out.println();
             System.out.println(" 5º) La bolsa esta codificando la cadena de texto de respuesta de venta para enviar al broker...");
             System.out.println();
+            System.out.println();
+            System.out.println(" ------------ Los datos de la venta son: ");
+            System.out.println();
+            System.out.println(" ---------------- ID Operacion = "+idOperacionDecodificado+"  ---- OK");
+            System.out.println(" ---------------- Nombre Cliente = "+nombreClienteDecodificado+"  ---- OK");
+            System.out.println(" ---------------- DNI Cliente = "+dniClienteDecodificado+"  ---- OK");
+            System.out.println(" ---------------- Nombre Empresa = "+nombreEmpresaDecodificado+"  ---- OK");
+            System.out.println(" ---------------- Número de acciones vendidas "+numAccionesVendidas+"  ---- OK");
+            System.out.println(" ---------------- Precio de la acción "+precioDeAccion+"  ---- OK");
+            System.out.println(" ---------------- Beneficio total venta "+beneficioTotal+"  ---- OK");
             //4º DEVOLVEMOS LA CADENA CODIFICADA AL BROKER
             System.out.println(" -------- Se ha terminado de codificar la cadena.");
             System.out.println();
             System.out.println(" -------- La cadena de texto codificada de respuesta de venta generada por la bolsa es: "+idOperacionDecodificado + "|" + nombreClienteDecodificado + "|" + dniClienteDecodificado + "|" + efectuada+ "|" + numAccionesVendidas + "|" + precioDeAccion+ "|" + beneficioTotal+"|");
+            System.out.println();
+            System.out.println("                                                                "+idOperacionDecodificado + "|" + nombreClienteDecodificado + "|" + dniClienteDecodificado + "|" + efectuada+ "|" + numAccionesVendidas + "|" + precioDeAccion+ "|" + beneficioTotal+"|");
             System.out.println();
             System.out.println(" 6º) La bolsa esta enviando la cadena de texto de respuesta de venta al broker...");
             System.out.println();

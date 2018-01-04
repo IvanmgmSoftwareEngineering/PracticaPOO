@@ -292,7 +292,7 @@ public class Banco {
       Descripción: Envia al broker las peticiones de venta si todo el cliente cumple los requisitos(cliente pretenece al banco, el saldo del cleinte es superior a la cantidad que desea invertir).
       */
 
-    public void compraAcciones(String dniCliente, String nombreEmpresa, float cantidadMaxAInvertir) {
+    public void compraAcciones(String dniCliente, String nombreEmpresa, double cantidadMaxAInvertir) {
         System.out.println();
         System.out.println(" ----------------------- ZONA BANCO -----------------------");
         System.out.println();
@@ -348,7 +348,7 @@ public class Banco {
       Descripción: Envia al broker las peticiones de venta si todo el cliente cumple los requisitos(cliente pretenece al banco, tieen acciones de la empresa que intenta vender y el numero de titulos que quiere vender es inferior o igual al numero de titulos que posee en su paquete de acciones).
       */
 
-    public void ventaAcciones(String dniCliente, String nombreEmpresa, float numTitulosAVender) {
+    public void ventaAcciones(String dniCliente, String nombreEmpresa, double numTitulosAVender) {
         System.out.println();
         System.out.println(" ----------------------- ZONA BANCO -----------------------");
         System.out.println();
@@ -356,7 +356,7 @@ public class Banco {
         Cliente cliente = new Cliente("ssss", dniCliente, 2);
         if (!clientes.contains(cliente)) {
             System.out.println(" El cliente con dni: " + dniCliente + " no es cliente de este banco");
-        } else {
+        } else { //el cliente si existe
             Iterator iterador = clientes.iterator(); // creo un objeto Iterator para recorrer la coleccion
             while (iterador.hasNext() && !encontrado) {
                 Cliente cliente1 = (Cliente) iterador.next();
@@ -368,15 +368,15 @@ public class Banco {
             boolean encontrado1 = false;
             PaqueteDeAcciones paqueteDeAcciones1 = new PaqueteDeAcciones(1, 1, nombreEmpresa);
             Iterator iterador1 = cliente.getPaquetesAcciones().iterator(); // creo un objeto Iterator para recorrer la coleccion
-            while (iterador.hasNext() && !encontrado1) {//recorro los paquetes de acciones del cliente para comprobar dos cosas: que tiene un paquete de la empresa de la que iintenta vender titulos y que el numero de acciones que posee de dicha empresa es mayor o igual que el número de acciones que intenta vender
+            while (iterador1.hasNext() && !encontrado1) {//recorro los paquetes de acciones del cliente para comprobar dos cosas: que tiene un paquete de la empresa de la que iintenta vender titulos y que el numero de acciones que posee de dicha empresa es mayor o igual que el número de acciones que intenta vender
                 PaqueteDeAcciones paqueteDeAcciones = (PaqueteDeAcciones) iterador1.next();
-                if (paqueteDeAcciones.getNombreEmpresa().equals(nombreEmpresa)) {
+                if (paqueteDeAcciones.equals(paqueteDeAcciones1)) {
                     encontrado1 = true;
                     paqueteDeAcciones1 = paqueteDeAcciones;
                 }
             }
             if (!encontrado1) { // el cliente no posse ningun paquete de acciones con la empresa especificada
-                System.out.println(" El cliente con dni: " + dniCliente + " no tiene en su cartera de inversiones acciones de la empresa: " + nombreEmpresa + "Por lo tanto no puede ninguna acción de esa empresa");
+                System.out.println(" El cliente con dni: " + dniCliente + " no tiene en su cartera de inversiones acciones de la empresa: " + nombreEmpresa + " . Por lo tanto no puede ninguna acción de esa empresa");
 
             } else {//el cliente si posee un paquete de acciones con el nombre de empresa que ha proporcionado. Entonces ahora compruebo que el numero de titulos que tiene el cliente en el paquete de acciones asociado a dicha empresa es igual o superior al numero de titulos que quiere vender
                 if (paqueteDeAcciones1.getNumTitulos() < numTitulosAVender) {
@@ -437,11 +437,11 @@ public class Banco {
                 Iterator iterador1 = cliente.getPaquetesAcciones().iterator(); // creo un objeto Iterator para recorrer la coleccion
                 HashSet<Empresa> empresasQueSeQuierenActualizar = new HashSet<Empresa>();
                 Empresa empresa = new Empresa();
-                while (iterador.hasNext()) {//recorro los paquetes de acciones del cliente y cojo solo los nombres de los paquetes de acciones que posee
+                while (iterador1.hasNext()) {//recorro los paquetes de acciones del cliente y cojo solo los nombres de los paquetes de acciones que posee
                     PaqueteDeAcciones paqueteDeAcciones = (PaqueteDeAcciones) iterador1.next();
                     empresa.setNombre(paqueteDeAcciones.getNombreEmpresa());
-                    empresa.setValorTituloActual(paqueteDeAcciones.getValorActualTitulo());// -2 es un valor que no refleja nada. se utiliza para que el broker no pueda saber
-                    empresa.setValorTituloPrevio(-2);// -2 es un valor que no refleja nada
+                    empresa.setValorTituloActual(paqueteDeAcciones.getValorActualTitulo());
+                    empresa.setValorTituloPrevio(0);// -2 es un valor que no refleja nada
                     empresasQueSeQuierenActualizar.add(empresa);
                 }
                 System.out.println(" El banco esta almacenando la petición de actualización en la lista de peticiones pendientes del borker...");
@@ -631,15 +631,30 @@ public class Banco {
                                 System.out.println(" La Operacion no puedo realizarse. Y no se ha podido devolver el número de acciones que el cliente queria invertir ya que en la lista de paquetes de acciones del cliente con dni: " + mensajeRespouestaVenta.getDniCliente() + " ya no existe ningún paquete de acciones de la empresa: " + mensajeRespouestaVenta.getNombreEmpresa());
                             } else {
 
+                                System.out.println(" La Operacion no puedo realizarse. Y el banco ha devuelto el número de acciones que el cliente pretendia vender a su paquete de acciones");
+                                System.out.println();
+                                System.out.println(" ---- Dado que la empresa con nombre: " + paqueteDeAccionesAsociadoOperacion.getNombreEmpresa() + " ya no existe en la bolsa. El valor de la acción de dicha empresa pasa a valer 0");
+                                System.out.println();
+                                System.out.println(" ------------ Valores del paquete antes del intento de venta fallido: ");
+                                System.out.println();
+                                System.out.println(" ---------------- Nombre Empresa = " + paqueteDeAccionesAsociadoOperacion.getNombreEmpresa());
+                                System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesAsociadoOperacion.getNumTitulos()+mensajeRespouestaVenta.getNumAccionesVendidas());
+                                System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesAsociadoOperacion.getValorActualTitulo());
+
                                 paqueteDeAccionesAsociadoOperacion.setNumTitulos(paqueteDeAccionesAsociadoOperacion.getNumTitulos() + mensajeRespouestaVenta.getNumTitulosAVender());
+                                paqueteDeAccionesAsociadoOperacion.setValorActualTitulo(0);
                                 clienteAsociadoOperacion.getPaquetesAcciones().remove(paqueteDeAccionesAsociadoOperacion);
                                 clienteAsociadoOperacion.getPaquetesAcciones().add(paqueteDeAccionesAsociadoOperacion);
 
+                                System.out.println();
+                                System.out.println(" ------------ Valores del paquete después del intento de venta fallido: ");
+                                System.out.println();
+                                System.out.println(" ---------------- Nombre Empresa = " + paqueteDeAccionesAsociadoOperacion.getNombreEmpresa());
+                                System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesAsociadoOperacion.getNumTitulos());
+                                System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesAsociadoOperacion.getValorActualTitulo());
+
                                 clientes.remove(clienteAsociadoOperacion);
                                 clientes.add(clienteAsociadoOperacion);
-
-                                System.out.println(" La Operacion no puedo realizarse. Y el banco ha devuelto el número de acciones que el cliente pretendia vender a su paquete de acciones");
-                                System.out.println();
 
                             }
                         } else {// la operacion es true
@@ -658,7 +673,7 @@ public class Banco {
                                 System.out.println(" ------------ Valores del paquete antes de la venta: ");
                                 System.out.println();
                                 System.out.println(" ---------------- Nombre Empresa = " + paqueteDeAccionesAsociadoOperacion.getNombreEmpresa());
-                                System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesAsociadoOperacion.getNumTitulos());
+                                System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesAsociadoOperacion.getNumTitulos()+mensajeRespouestaVenta.getNumAccionesVendidas());
                                 System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesAsociadoOperacion.getValorActualTitulo());
                                 System.out.println();
                                 System.out.println();
@@ -666,7 +681,6 @@ public class Banco {
 
                                 clienteAsociadoOperacion.setSaldo(clienteAsociadoOperacion.getSaldo() + mensajeRespouestaVenta.getBeneficioTotal());
 
-                                paqueteDeAccionesAsociadoOperacion.setNumTitulos(paqueteDeAccionesAsociadoOperacion.getNumTitulos() - mensajeRespouestaVenta.getNumAccionesVendidas());
                                 paqueteDeAccionesAsociadoOperacion.setValorActualTitulo(mensajeRespouestaVenta.getPrecioDeAccion());
 
                                 clienteAsociadoOperacion.getPaquetesAcciones().remove(paqueteDeAccionesAsociadoOperacion);
@@ -698,14 +712,14 @@ public class Banco {
 
                     MensajeRespuestaActualizacion mensajeRespouestaActualizacion = (MensajeRespuestaActualizacion) mensaje;
 
-                    System.out.println("-------------- ACTUALIZANDO PAQUETES DE ACCIONES DE LA EMPRESA: " + mensajeRespouestaActualizacion.getNombreEmpresa() + " DEL CLIENTE CON DNI: " + mensajeRespouestaActualizacion.getDniCliente() + " ASOCIADO A LA OPERACIÓN DE ACTUALIZACIÓN CON ID: " + mensajeRespouestaActualizacion.getIdOperacion() + "-------------");
+                    System.out.println("-------------- ACTUALIZANDO PAQUETES DE ACCIONES DEL CLIENTE CON DNI: " + mensajeRespouestaActualizacion.getDniCliente() + " ASOCIADO A LA OPERACIÓN DE ACTUALIZACIÓN CON ID: " + mensajeRespouestaActualizacion.getIdOperacion() + "-------------");
                     System.out.println();
 
                     //buscamos el cliente de asociado a la opracion de compra
                     boolean encontrado = false;
                     Cliente clienteAsociadoOperacion = new Cliente("da igual", mensaje.getDniCliente(), 1);//es un objeto de tipo cleinte auxiliar del que solo nos importa el dni para localizar al cliente
                     Iterator iterador1 = clientes.iterator(); // creo un objeto Iterator para recorrer la coleccion
-                    while (iterador1.hasNext() && encontrado) {
+                    while (iterador1.hasNext() && !encontrado) {
                         Cliente cliente = (Cliente) iterador1.next();
                         if (cliente.equals(clienteAsociadoOperacion)) {
                             encontrado = true;
@@ -713,12 +727,15 @@ public class Banco {
                         }
                     }
                     if (!encontrado) {
-                        System.out.println("No se ha podido actualizar la lista de paquetes de acciones del cliente porque el cliente con dni: " + mensaje.getDniCliente() + " ya no pertenece a este banco");
+                        System.out.println(" No se ha podido actualizar la lista de paquetes de acciones del cliente porque el cliente con dni: " + mensaje.getDniCliente() + " ya no pertenece a este banco");
+                        System.out.println();
+
                     } else {
                         //para cada uno de los paquetes que se quieren actualizar comprobamos que cada uno de ellos estan en la lista de pequetes de acciones del cliente
                         Iterator iterador2 = mensajeRespouestaActualizacion.getEmpresasQueSeQuierenActualizar().iterator(); // creo un objeto Iterator para recorrer la coleccion
                         while (iterador2.hasNext()) {
                             Empresa empresaQueSeQuiereActualizar = (Empresa) iterador2.next();
+
                             if (empresaQueSeQuiereActualizar.getValorTituloActual() == -1) {// si el valor del titulo actual de la empresa que se quiere actualizar tiene un valor de -1 significa que el broker a detectado que en la bolsa esa empresa ya no existe
                                 encontrado = false;
                                 PaqueteDeAcciones paqueteDeAccionesBuscado = new PaqueteDeAcciones(1, 1, empresaQueSeQuiereActualizar.getNombre());//es un objeto de tipo paqueteDeacciones auxiliar del que solo nos importa el nombre de la empresa para localizar al paquete de acciones asociado a esa empresa
@@ -732,11 +749,13 @@ public class Banco {
 
                                     if (encontrado) {
                                         System.out.println(" La empresa con nombre: " + empresaQueSeQuiereActualizar.getNombre() + " ya no existe en la bolsa. Por lo tanto el valor de la acción de dicha empresa pasa a valer 0");
+                                        System.out.println();
                                         paqueteDeAccionesBuscado.setValorActualTitulo(0);
                                         clienteAsociadoOperacion.getPaquetesAcciones().remove(paqueteDeAccionesBuscado);
                                         clienteAsociadoOperacion.getPaquetesAcciones().add(paqueteDeAccionesBuscado);
                                     } else {
                                         System.out.println(" La empresa con nombre: " + empresaQueSeQuiereActualizar.getNombre() + " ya no existe en la bolsa ni en la cartera de acciones del cliente.");
+                                        System.out.println();
 
                                     }
                                 }
@@ -746,42 +765,41 @@ public class Banco {
                                 Iterator iterador3 = clienteAsociadoOperacion.getPaquetesAcciones().iterator(); // creo un objeto Iterator para recorrer la coleccion
                                 while (iterador3.hasNext() && !encontrado) {//recorre todos los paquetes de acciones que tiene el cliente
                                     PaqueteDeAcciones paqueteDeAcciones = (PaqueteDeAcciones) iterador3.next();
-                                    if (paqueteDeAcciones.equals(empresaQueSeQuiereActualizar)) {
+                                    if (paqueteDeAcciones.equals(paqueteDeAccionesBuscado)) {
                                         encontrado = true;
                                         paqueteDeAccionesBuscado = paqueteDeAcciones;
                                     }
+                                }
 
-                                    if (!encontrado) {
-                                        System.out.println(" La empresa con nombre: " + empresaQueSeQuiereActualizar.getNombre() + " ya no existe en cartera de acciones del cliente.");
+                                if (!encontrado) {
+                                    System.out.println(" La empresa con nombre: " + empresaQueSeQuiereActualizar.getNombre() + " ya no existe en cartera de acciones del cliente.");
+                                    System.out.println();
 
-                                    } else { // existe en la bolsa y en la carte de acciones del cliente. Entonces acutalizo su valor
-                                        System.out.println(" El banco esta actualizando los datos del cliente (paquete de acciones)...");
-                                        System.out.println();
+                                } else { // existe en la bolsa y en la cartera de acciones del cliente. Entonces acutalizo su valor
+                                    System.out.println(" El banco esta actualizando los datos del cliente (paquete de acciones)...");
+                                    System.out.println();
 
-                                        System.out.println(" ---------------- Saldo = " + clienteAsociadoOperacion.getSaldo());
-                                        System.out.println();
-                                        System.out.println(" ------------ Valores del paquete antes de la actualización: ");
-                                        System.out.println();
-                                        System.out.println(" ---------------- Nombre Empresa = " + paqueteDeAccionesBuscado.getNombreEmpresa());
-                                        System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesBuscado.getNumTitulos());
-                                        System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesBuscado.getValorActualTitulo());
-                                        System.out.println();
-                                        System.out.println();
+                                    System.out.println(" ---------------- Saldo = " + clienteAsociadoOperacion.getSaldo());
+                                    System.out.println();
+                                    System.out.println(" ------------ Valores del paquete antes de la actualización: ");
+                                    System.out.println();
+                                    System.out.println(" ---------------- Nombre Empresa = " + paqueteDeAccionesBuscado.getNombreEmpresa());
+                                    System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesBuscado.getNumTitulos());
+                                    System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesBuscado.getValorActualTitulo());
+                                    System.out.println();
+                                    System.out.println();
 
-                                        paqueteDeAccionesBuscado.setValorActualTitulo(empresaQueSeQuiereActualizar.getValorTituloActual());
-                                        clienteAsociadoOperacion.getPaquetesAcciones().remove(paqueteDeAccionesBuscado);
-                                        clienteAsociadoOperacion.getPaquetesAcciones().add(paqueteDeAccionesBuscado);
+                                    paqueteDeAccionesBuscado.setValorActualTitulo(empresaQueSeQuiereActualizar.getValorTituloActual());
+                                    clienteAsociadoOperacion.getPaquetesAcciones().remove(paqueteDeAccionesBuscado);
+                                    clienteAsociadoOperacion.getPaquetesAcciones().add(paqueteDeAccionesBuscado);
 
-                                        System.out.println(" ------------ Valores del paquete después de la actualización: ");
-                                        System.out.println();
-                                        System.out.println(" ---------------- Nombre Empresa = " + paqueteDeAccionesBuscado.getNombreEmpresa());
-                                        System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesBuscado.getNumTitulos());
-                                        System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesBuscado.getValorActualTitulo());
-                                        System.out.println();
-                                        System.out.println();
-                                    }
-
-
+                                    System.out.println(" ------------ Valores del paquete después de la actualización: ");
+                                    System.out.println();
+                                    System.out.println(" ---------------- Nombre Empresa = " + paqueteDeAccionesBuscado.getNombreEmpresa());
+                                    System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesBuscado.getNumTitulos());
+                                    System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesBuscado.getValorActualTitulo());
+                                    System.out.println();
+                                    System.out.println();
                                 }
                             }
                         }
@@ -789,7 +807,6 @@ public class Banco {
                     System.out.println("-------------- FIN ACTUALIZANDO DE DATOS (PAQUETE DE ACCIONES) DEL CLIENTE CON DNI: " + mensajeRespouestaActualizacion.getDniCliente() + " ASOCIADO A LA OPERACIÓN DE actualización CON ID: " + mensajeRespouestaActualizacion.getIdOperacion() + "-------------");
                     System.out.println();
                     System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
-
                 }
             }
         }
@@ -805,7 +822,6 @@ public class Banco {
     }
 
     //FIN ZONA DE OPERACIONES
-
 
 
 }
