@@ -89,6 +89,7 @@ public class InterfazDeUsuario {
         int intentos;
         int i;
         char letraNombre;
+        char letraDni;
         char letraMenu;
         char letraMenu1;
         intentos = INTENTOS;
@@ -113,10 +114,13 @@ public class InterfazDeUsuario {
                             System.out.print("Nombre: ");
                             datos = leeTeclado.leeDatos();
 
-                        } else {
+                        }
+
+                        else {
                             return datos;
                         }
-                    } catch (StringIndexOutOfBoundsException siobe) {
+                    }
+                    catch (StringIndexOutOfBoundsException siobe) {
                         System.out.println("ERROR: El dni debe contener 9 caracteres.");
                     }
                 }
@@ -160,7 +164,9 @@ public class InterfazDeUsuario {
                                             System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
                                             System.out.print("Inserte la opción deseada: ");
                                             datos = leeTeclado.leeDatos();
-                                        } else return datos;
+                                        } else{
+                                            return datos;
+                                        }
 
                                     }
                                 }
@@ -179,16 +185,60 @@ public class InterfazDeUsuario {
             } else if (opcion.equals("opcionDNI")) {
                 while (intentos > 1) {
                     try {
-                        if (datos.length() != 9) {//el numero e caracteres es distinto de 9
+                        if (datos.length() != 9) {//el numero es caracteres es distinto de 9
                             intentos = intentos - 1;
                             System.out.println();
-                            System.out.println("ERROR: El dni debe contener 9 caracteres.");
+                            System.out.println("ERROR: El dni debe contener 9 caracteres de tipo alfanuméricos");
                             System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
                             System.out.print("Dni cliente: ");
                             datos = leeTeclado.leeDatos();
                         }
                         else {
-                            return datos;
+                            encontrado = false;
+                            i = 0;
+                            while (!encontrado && i < datos.length()) {
+                                letraDni = datos.charAt(i);
+                                if (!(((letraDni >= 65) && (letraDni <= 90)) || ((letraDni >= 97) && (letraDni <= 122))||(letraDni >= 48 && letraDni <= 57))) {
+                                    encontrado = true;
+                                }
+                                i = i + 1;
+                            }
+                            if (encontrado) {
+                                System.out.println("El dni debe contener caracteres válidos; solo letras desde a-z o A-Z y números 0-9");
+                                intentos = intentos - 1;
+                                System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                                System.out.print("Dni cliente: ");
+                                datos = leeTeclado.leeDatos();
+                            }
+                            else {//todos losa caracteres son solo letras desde a-z o A-Z y números 0-9
+                                letraDni = datos.charAt(8);
+                                if (!(((letraDni >= 65) && (letraDni <= 90)) || ((letraDni >= 97) && (letraDni <= 122)))) {
+                                    System.out.println("El dni debe contener en su última posición una letra a-z o A-Z ");
+                                    intentos = intentos - 1;
+                                    System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                                    System.out.print("Dni cliente: ");
+                                    datos = leeTeclado.leeDatos();
+                                } else {
+                                    encontrado = false;
+                                    i = 0;
+                                    while (!encontrado && i < 8) {
+                                        letraDni = datos.charAt(i);
+                                        if (!(letraDni >= 48 && letraDni <= 57)) {
+                                            encontrado = true;
+                                        }
+                                        i = i + 1;
+                                    }
+                                    if (encontrado) {
+                                        System.out.println("El dni debe contener en sus primeras 8 posiciones numeros. 00000000A");
+                                        intentos = intentos - 1;
+                                        System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                                        System.out.print("Dni cliente: ");
+                                        datos = leeTeclado.leeDatos();
+                                    } else {
+                                        return datos;
+                                    }
+                                }
+                            }
                         }
                     }
                     catch (StringIndexOutOfBoundsException siobe ){
@@ -220,7 +270,7 @@ public class InterfazDeUsuario {
                         }
                     }
                     catch (StringIndexOutOfBoundsException siobe){
-                        System.out.println("ERROR: El dni debe contener 9 caracteres.");
+                        System.out.println("ERROR: El path es incorrecto.");
                     }
 
                 }
