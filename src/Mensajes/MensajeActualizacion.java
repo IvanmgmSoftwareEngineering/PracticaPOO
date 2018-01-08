@@ -7,31 +7,34 @@ import Banco.PaqueteDeAcciones;
 import Bolsa.*;
 
 public class MensajeActualizacion extends Mensaje {
+    //ZONA DE VARIABLES
     protected HashSet <Empresa> empresasQueSeQuierenActualizar; //Contiene solo el nombre de las empresas que el cliente posee en cada uno de los paquetes de acciones
+    protected String fecha;
+    // FIN ZONA VALIABLES
 
-    public MensajeActualizacion(int idOperacion, String nombreCliente, String dniCliente, TipoOperacion tipoOperacion, HashSet<Empresa> empresasQueSeQuierenActualizar) {
+    //ZONA DE CONSTRUCTORES
+    public MensajeActualizacion(int idOperacion, String fecha, String nombreCliente, String dniCliente, TipoOperacion tipoOperacion, HashSet<Empresa> empresasQueSeQuierenActualizar) {
         super(idOperacion, nombreCliente, dniCliente, tipoOperacion);
+        this.fecha=fecha;
         this.empresasQueSeQuierenActualizar = empresasQueSeQuierenActualizar;
     }
+    //FIN ZONA DE CONSTRUCTORES
 
+    //ZONA DE GETTERS
     public HashSet<Empresa> getEmpresasQueSeQuierenActualizar() {
         return empresasQueSeQuierenActualizar;
     }
+    public String getFecha() {
+        return fecha;
+    }
+    //FIN ZONA DE GETTERS
 
+    //ZONA DE METODOS PUBLICOS
     @Override
     public String toString() {
         //String cadena = null;
 
-         return "IDoperacion: "+this.idOperacion+ ", Tipo: "+ this.tipoOperacion+", Nombre Cliente: "+ this.nombreCliente + ", Dni Cliente: "+ this.dniCliente + ", Nombre Empresas que se quieren actualizar: "+"\n" + empresasQueSeQuierenActualizar.toString();
-
-          /*  cadena= "Nombre Cliente: " + this.nombre + "  ||||  dni: " + this.dni + "  ||||Saldo: " + this.saldo + "    |||| Categoria: NO Premium" + "    ||||Paquetes de Acciones:" + "\n" ;
-            Iterator iterador = paquetesAcciones.iterator();
-            while (iterador.hasNext()){
-                PaqueteDeAcciones paquete = (PaqueteDeAcciones) iterador.next();
-                cadena = cadena + paquete.toString() +"\n";
-            }
-            */
-
+         return "IDoperacion: "+this.idOperacion+ ", Fecha: "+this.fecha+ ", Tipo: "+ this.tipoOperacion+", Nombre Cliente: "+ this.nombreCliente + ", Dni Cliente: "+ this.dniCliente + ", Nombre Empresas que se quieren actualizar: "+"\n" + empresasQueSeQuierenActualizar.toString();
     }
-
+    //FIN ZONA DE METODOS PUBLICOS
 }

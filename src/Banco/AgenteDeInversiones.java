@@ -2,67 +2,48 @@ package Banco;
 
 import Bolsa.BolsaDeValores;
 import Bolsa.Empresa;
+import General.Utilidades;
 import Mensajes.*;
-import com.sun.tools.corba.se.idl.constExpr.BooleanOr;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 public class AgenteDeInversiones extends Persona {
+    //ZONA DE VARIABLES
     private BolsaDeValores bolsa;
     private ArrayList<Mensaje> operacionesPendientes;
     private ArrayList<Mensaje> resultadosOperaciones;
-    private String tipoAgente;
-
+    private TipoAgente tipoAgente; // o GESTOR  o BROKER
+    //FIN ZONA VALIABLES
 
     //ZONA DE CONSTRUCTORES
-
-    public AgenteDeInversiones(String nombre, String dni, String tipoAgente) {
-        super(nombre, dni);
-        this.tipoAgente = tipoAgente;
-    }
-
-    public AgenteDeInversiones(String nombre, String dni, BolsaDeValores bolsa, String tipoAgente) {
+    public AgenteDeInversiones(String nombre, String dni, BolsaDeValores bolsa, TipoAgente tipoAgente) {
         super(nombre, dni);
         this.bolsa = bolsa;
         this.tipoAgente = tipoAgente;
         this.operacionesPendientes = new ArrayList<Mensaje>();
         this.resultadosOperaciones = new ArrayList<Mensaje>();
     }
-
-
-    // FIN ZONA DE CONSTRUCTORES
+    //FIN ZONA DE CONSTRUCTORES
 
     //ZONA DE GETTERS
-
     public ArrayList<Mensaje> getOperacionesPendientes() {
         return operacionesPendientes;
     }
-
     public ArrayList<Mensaje> getResultadosOperaciones() {
         return resultadosOperaciones;
     }
-
     public BolsaDeValores getBolsa() {
         return bolsa;
     }
-
     //FIN ZONA DE GETTERS
-
-    //ZONA DE METODOS PRIVADOS
-
-
-    // FIN ZONA DE PRIVADOS
 
     //ZONA DE METODOS PUBLICOS
 
-    /*Nombre método: consultaDeInversiones
-              Entradas: nada
-              Salidas: nada
-              Excepciones:
-              Descripción: Realiza una recomendacion al cliente de la empresa que una variacion a tenido
-              */
+        /*Nombre método: consultaDeInversiones
+          Entradas: nada
+          Salidas: nada
+          Excepciones:
+          Descripción: Realiza una recomendacion al cliente de la empresa que una variacion a tenido
+         */
     public String consultaDeInversiones() {
 
         if (bolsa.getEmpresas().size() == 0) {
@@ -84,14 +65,13 @@ public class AgenteDeInversiones extends Persona {
         }
     }
 
-     /*Nombre método: ejecutaPeticionesDeAcciones
+        /*Nombre método: ejecutaPeticionesDeAcciones
           Entradas: nada
           Salidas: nada
           Excepciones:
           Descripción: ejecuta la peticiones que tieen el blorker en la lista de peticiones pendientes generando una cadena codificada que envia a la bolsa
-          */
-
-    public void ejecutaPeticionesDeAcciones() {
+         */
+    public void ejecutaPeticionesDeAcciones() throws NullPointerException {
         if (operacionesPendientes.size() != 0) {//en primer lugar el broker compruba si hay alguna peticion pendiente en la lsita
 
             String cadenaCompraRespuestaCodificada = null;
@@ -122,9 +102,16 @@ public class AgenteDeInversiones extends Persona {
                     System.out.println();
                     System.out.println(" -------------- ZONA BROKER -------------");
                     System.out.println();
-                    System.out.println(" 1º) El broker esta codificando la operación de COMPRA con id: " + mensajeCompra.getIdOperacion());
+                    System.out.println(" 1º) El broker esta codificando la operación de COMPRA con ID Operacón: " + mensajeCompra.getIdOperacion() + " ...");
                     System.out.println();
+                    System.out.println(" ------------ Los datos a codificar son: ");
+                    System.out.println();
+                    System.out.println(" ---------------- ID Operacion = " + mensajeCompra.getIdOperacion() + "  ---- OK");
+                    System.out.println(" ---------------- Nombre Cliente = " + mensajeCompra.getNombreCliente() + "  ---- OK");
+                    System.out.println(" ---------------- Nombre empresa =  " + mensajeCompra.getNombreEmpresa() + "  ---- OK");
+                    System.out.println(" ---------------- MAX. dinero a invertir= " + mensajeCompra.getCantidadMaximaAInvertir() + "  ---- OK");
                     cadenaCompraCodificada = mensajeCompra.codificar();
+                    System.out.println();
                     System.out.println(" -------- Se ha terminado de codificar la cadena.");
                     System.out.println();
 
@@ -134,11 +121,13 @@ public class AgenteDeInversiones extends Persona {
                     //  3º aumentar el valor de la accion de la empresa acorde a un valor proporcional al numero de acciones que compro y al valor actual de la accion. (ojo se debe cambiar valor actual y valor previo)
                     //  4º devolver una cadena codificada de respuesta String
 
-                    System.out.println(" -------- La cadena de texto codificada de compra generada por el broker es: " + cadenaCompraCodificada);
+                    System.out.println(" -------- La cadena de texto codificada de compra generada por el broker es: " );
+                    System.out.println();
+                    System.out.println(cadenaCompraCodificada);
                     System.out.println();
                     System.out.println(" 2º) El broker esta enviando la cadena de texto codifica a la bolsa...");
                     System.out.println();
-                    cadenaCompraRespuestaCodificada = bolsa.recepcioncadenaCodificadaCompraDesdeElBroker(cadenaCompraCodificada);
+                    cadenaCompraRespuestaCodificada = bolsa.intentaOperacion(cadenaCompraCodificada);
 
                     System.out.println(" -------------- ZONA BROKER -------------");
                     System.out.println();
@@ -153,7 +142,6 @@ public class AgenteDeInversiones extends Persona {
                     //Variables para decodificar
                     String idOperacionDecodificado = "";
                     String nombreClienteDecodificado = "";
-                    String dniClienteDecodificado = "";
                     String resultadoOperaciondecodificado = "";
                     String numAccionesCompradas = "";
                     String precioDeAccion = "";
@@ -175,14 +163,6 @@ public class AgenteDeInversiones extends Persona {
                         nombreClienteDecodificado = nombreClienteDecodificado + caracter;
                         i = i + 1;
                         caracter = cadenaCompraRespuestaCodificada.charAt(i);
-                    }
-                    i = i + 1;
-                    //Decodificamos el DNI del cliente
-                    caracter = cadenaCompraCodificada.charAt(i);
-                    while (caracter != '|') {
-                        dniClienteDecodificado = dniClienteDecodificado + caracter;
-                        i = i + 1;
-                        caracter = cadenaCompraCodificada.charAt(i);
                     }
                     i = i + 1;
                     //Decodificamos el resultado de la opracion
@@ -225,7 +205,6 @@ public class AgenteDeInversiones extends Persona {
                         System.out.println();
                         System.out.println(" ---------------- ID Operacion = " + idOperacionDecodificado);
                         System.out.println(" ---------------- Nombre Cliente = " + nombreClienteDecodificado);
-                        System.out.println(" ---------------- DNI Cliente = " + dniClienteDecodificado);
                         System.out.println(" ---------------- Número de acciones compradas " + numAccionesCompradas);
                         System.out.println(" ---------------- Precio de la acción " + precioDeAccion);
                         System.out.println(" ---------------- Dinero sobrante " + dineroSobrante);
@@ -245,13 +224,12 @@ public class AgenteDeInversiones extends Persona {
                         System.out.println();
                         System.out.println(" ---------------- ID Operacion = " + idOperacionDecodificado);
                         System.out.println(" ---------------- Nombre Cliente = " + nombreClienteDecodificado);
-                        System.out.println(" ---------------- DNI Cliente = " + dniClienteDecodificado);
                         System.out.println(" ---------------- Resultado opreracion= " + resultadoOperaciondecodificado);
                         System.out.println();
 
                         System.out.println(" 8º) El broker esta almacenando el resultado de la operación de compra con id:" + idOperacionDecodificado + " en la lista de operaciones reralizadas del broker...");
                         System.out.println();
-                        Mensaje mensajeResuestaCompra = new MensajeRespuestaCompra(idOperacion, nombreClienteDecodificado, dniClienteDecodificado, TipoOperacion.COMPRA, mensajeCompra.getCantidadMaximaAInvertir(), false);
+                        Mensaje mensajeResuestaCompra = new MensajeRespuestaCompra(idOperacion, nombreClienteDecodificado, mensajeCompra.getDniCliente(), TipoOperacion.COMPRA, mensajeCompra.getCantidadMaximaAInvertir(), false);
                         resultadosOperaciones.add(mensajeResuestaCompra);
                         System.out.println("  El resultado de la operación de compra con id:" + idOperacionDecodificado + " ha sido almacenado con éxito");
                         System.out.println();
@@ -266,7 +244,7 @@ public class AgenteDeInversiones extends Persona {
                         double numeroAccionesCompradas = Double.parseDouble(numAccionesCompradas);
                         double precioAccionComprada = Double.parseDouble(precioDeAccion);
                         double sobranteDinero = Double.parseDouble(dineroSobrante);
-                        Mensaje mensajeRespuestaCompra = new MensajeRespuestaCompra(idOperacion, nombreClienteDecodificado, dniClienteDecodificado, mensajeCompra.getNombreEmpresa(), TipoOperacion.COMPRA, efectuada, numeroAccionesCompradas, precioAccionComprada, sobranteDinero);
+                        Mensaje mensajeRespuestaCompra = new MensajeRespuestaCompra(idOperacion, nombreClienteDecodificado, mensajeCompra.getDniCliente(), mensajeCompra.getNombreEmpresa(), TipoOperacion.COMPRA, efectuada, numeroAccionesCompradas, precioAccionComprada, sobranteDinero);
                         System.out.println(" 8º) El broker esta almacenando el resultado de la operación con id:" + idOperacionDecodificado + " en la lista de operaciones reralizadas del broker...");
                         System.out.println();
                         resultadosOperaciones.add(mensajeRespuestaCompra);
@@ -276,7 +254,6 @@ public class AgenteDeInversiones extends Persona {
                         System.out.println();
                         System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
                     }
-
                     // FIN OPERACION DE COMPRA
                 }
 
@@ -297,7 +274,6 @@ public class AgenteDeInversiones extends Persona {
                     System.out.println();
                     System.out.println(" ---------------- ID Operacion = " + mensajeVenta.getIdOperacion() + "  ---- OK");
                     System.out.println(" ---------------- Nombre Cliente = " + mensajeVenta.getNombreCliente() + "  ---- OK");
-                    System.out.println(" ---------------- DNI Cliente = " + mensajeVenta.getDniCliente() + "  ---- OK");
                     System.out.println(" ---------------- Nombre empresa =  " + mensajeVenta.getNombreEmpresa() + "  ---- OK");
                     System.out.println(" ---------------- Número títulos a vender = " + mensajeVenta.getNumTitulosAVender() + "  ---- OK");
 
@@ -333,7 +309,7 @@ public class AgenteDeInversiones extends Persona {
                     System.out.println(" 2º) El broker esta enviando la cadena de texto codifica a la bolsa...");
                     System.out.println();
 
-                    cadenaVentaRespuestaCodificada = bolsa.recepcioncadenaCodificadaVentaDesdeElBroker(cadenaVentaCodificada);
+                    cadenaVentaRespuestaCodificada = bolsa.intentaOperacion(cadenaVentaCodificada);
 
                     System.out.println(" -------------- ZONA BROKER -------------");
                     System.out.println();
@@ -348,7 +324,6 @@ public class AgenteDeInversiones extends Persona {
                     //Variables para decodificar
                     String idOperacionDecodificado = "";
                     String nombreClienteDecodificado = "";
-                    String dniClienteDecodificado = "";
                     String resultadoOperaciondecodificado = "";
                     String numAccionesVendidas = "";
                     String precioDeAccion = "";
@@ -368,14 +343,6 @@ public class AgenteDeInversiones extends Persona {
                     caracter = cadenaVentaRespuestaCodificada.charAt(i);
                     while (caracter != '|') {
                         nombreClienteDecodificado = nombreClienteDecodificado + caracter;
-                        i = i + 1;
-                        caracter = cadenaVentaRespuestaCodificada.charAt(i);
-                    }
-                    i = i + 1;
-                    //Decodificamos el DNI del cliente
-                    caracter = cadenaVentaRespuestaCodificada.charAt(i);
-                    while (caracter != '|') {
-                        dniClienteDecodificado = dniClienteDecodificado + caracter;
                         i = i + 1;
                         caracter = cadenaVentaRespuestaCodificada.charAt(i);
                     }
@@ -420,7 +387,6 @@ public class AgenteDeInversiones extends Persona {
                         System.out.println();
                         System.out.println(" ---------------- ID Operacion = " + idOperacionDecodificado);
                         System.out.println(" ---------------- Nombre Cliente = " + nombreClienteDecodificado);
-                        System.out.println(" ---------------- DNI Cliente = " + dniClienteDecodificado);
                         System.out.println(" ---------------- Número de acciones compradas " + numAccionesVendidas);
                         System.out.println(" ---------------- Precio de la acción " + precioDeAccion);
                         System.out.println(" ---------------- Dinero sobrante " + beneficioTotal);
@@ -440,13 +406,12 @@ public class AgenteDeInversiones extends Persona {
                         System.out.println();
                         System.out.println(" ---------------- ID Operacion = " + idOperacionDecodificado);
                         System.out.println(" ---------------- Nombre Cliente = " + nombreClienteDecodificado);
-                        System.out.println(" ---------------- DNI Cliente = " + dniClienteDecodificado);
                         System.out.println(" ---------------- Resultado opreracion= " + resultadoOperaciondecodificado);
                         System.out.println();
 
                         System.out.println(" 8º) El broker esta almacenando el resultado de la operación con id:" + idOperacionDecodificado + " en la lista de operaciones reralizadas del broker...");
                         System.out.println();
-                        Mensaje mensajeResuestaVenta = new MensajeRespuestaVenta(idOperacion, nombreClienteDecodificado, dniClienteDecodificado, mensajeVenta.getNombreEmpresa(), TipoOperacion.VENTA, mensajeVenta.getNumTitulosAVender(), false);
+                        Mensaje mensajeResuestaVenta = new MensajeRespuestaVenta(idOperacion, nombreClienteDecodificado, mensajeVenta.getDniCliente(), mensajeVenta.getNombreEmpresa(), TipoOperacion.VENTA, mensajeVenta.getNumTitulosAVender(), false);
                         resultadosOperaciones.add(mensajeResuestaVenta);
                         System.out.println("  El resultado de la operación de venta con id:" + idOperacionDecodificado + " ha sido almacenado con éxito");
                         System.out.println();
@@ -458,10 +423,10 @@ public class AgenteDeInversiones extends Persona {
 
                     // 4º// Añadir el mensajeRespuesCompra a la lista resultadosOperaciones
                     else {//el resultado de la operacion es true
-                        double numeroAccionesVendidas = Double.parseDouble(numAccionesVendidas);
+                        int numeroAccionesVendidas = Integer.parseInt(numAccionesVendidas);
                         double precioAccionVendida = Double.parseDouble(precioDeAccion);
                         double beneficioObtenido = Double.parseDouble(beneficioTotal);
-                        Mensaje mensajeRespuestaVenta = new MensajeRespuestaVenta(idOperacion, nombreClienteDecodificado, dniClienteDecodificado, mensajeVenta.getNombreEmpresa(), TipoOperacion.VENTA, efectuada, numeroAccionesVendidas, precioAccionVendida, beneficioObtenido);
+                        Mensaje mensajeRespuestaVenta = new MensajeRespuestaVenta(idOperacion, nombreClienteDecodificado, mensajeVenta.getDniCliente(), mensajeVenta.getNombreEmpresa(), TipoOperacion.VENTA, efectuada, numeroAccionesVendidas, precioAccionVendida, beneficioObtenido);
                         System.out.println(" 8º) El broker esta almacenando el resultado de la operación de venta con id:" + idOperacionDecodificado + " en la lista de operaciones reralizadas del broker...");
                         System.out.println();
                         resultadosOperaciones.add(mensajeRespuestaVenta);
@@ -471,9 +436,7 @@ public class AgenteDeInversiones extends Persona {
                         System.out.println();
                         System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
                     }
-
                     //FIN OPERACION DE VENTA
-
                 }
 
                 // OPERACION DE ACTULIZACION
@@ -482,7 +445,7 @@ public class AgenteDeInversiones extends Persona {
 
                     MensajeActualizacion mensajeActualizacion = (MensajeActualizacion) mensaje;
 
-                    System.out.println("-------------------------------------INICIO OPERACIÓN ACTUALIZACION: " + mensajeActualizacion.getIdOperacion() + "-------------------------------------------------------------");
+                    System.out.println("-------------------------------------INICIO OPERACIÓN ACTUALIZACION: " + mensajeActualizacion.getIdOperacion() +" CON FECHA: "+mensajeActualizacion.getFecha()+ "-------------------------------------------------------------");
                     System.out.println();
                     System.out.println(" -------------- ZONA BROKER -------------");
                     System.out.println();
@@ -505,11 +468,8 @@ public class AgenteDeInversiones extends Persona {
                                 encontrada = true;
                                 empresaAuxBolsa = empresaBolsa;
 
-
                             }
-
                         }
-
                         if (!encontrada) {
                             empresaParaActualizar.setValorTituloActual(-1); // pongo el valor del valor actual de la empresa a -1 ya que es un valor imposible que luego me servira para detectar en el banco que esta empresa ya no existe en la bolsa
                             empresasActualizadas.add(empresaParaActualizar);
@@ -527,11 +487,12 @@ public class AgenteDeInversiones extends Persona {
                     System.out.println();
                     System.out.println(" El broker esta almacenando el resultado de la operación de actualización con id:" + mensajeActualizacion.getIdOperacion() + " en la lista de operaciones reralizadas del broker...");
                     System.out.println();
-                    Mensaje mensajeResuestaActualizacion = new MensajeRespuestaActualizacion(mensajeActualizacion.getIdOperacion(), mensajeActualizacion.getNombreCliente(), mensajeActualizacion.getDniCliente(), mensajeActualizacion.getTipoOperacion(), empresasActualizadas,true);
+                    Mensaje mensajeResuestaActualizacion = new MensajeRespuestaActualizacion(mensajeActualizacion.getIdOperacion(),mensajeActualizacion.getFecha(), mensajeActualizacion.getNombreCliente(), mensajeActualizacion.getDniCliente(), mensajeActualizacion.getTipoOperacion(), empresasActualizadas,true);
                     resultadosOperaciones.add(mensajeResuestaActualizacion);
                     System.out.println(" ------------ Los datos de la actualización son: ");
                     System.out.println();
                     System.out.println(" ---------------- ID Operacion = " + mensajeActualizacion.getIdOperacion());
+                    System.out.println(" ---------------- Fecha petición = " + mensajeActualizacion.getFecha());
                     System.out.println(" ---------------- Nombre Cliente = " + mensajeActualizacion.getNombreCliente());
                     System.out.println(" ---------------- DNI Cliente = " + mensajeActualizacion.getDniCliente());
                     System.out.println(" ---------------- Valores de las acciones de la bolsa: ");
@@ -567,60 +528,49 @@ public class AgenteDeInversiones extends Persona {
 
     }
 
-
-
-
-
-
-
-
-
         /*Nombre método: añadePeticionCompraALaListaDeOperacionesPendientesDelBorker
           Entradas: int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, float cantidadMaxAInvertir
           Salidas: nada
           Excepciones:
           Descripción: Añade una solicitud de compra la lista de operaciones pendientes del broker
-          */
+         */
 
     public void añadePeticionCompraALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa,  double cantidadMaxAInvertir) {
         Mensaje peticionCompra = new MensajeCompra(idOperacion, nombreCliente, dniCliente, nombreEmpresa, TipoOperacion.COMPRA, cantidadMaxAInvertir);
         operacionesPendientes.add(peticionCompra);
     }
 
-    /*Nombre método: añadePeticionVentaALaListaDeOperacionesPendientesDelBorker
+        /*Nombre método: añadePeticionVentaALaListaDeOperacionesPendientesDelBorker
           Entradas: int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, TipoOperacion tipoOperacion, int numTitulosAVender)
           Salidas: nada
           Excepciones:
           Descripción: Añade una solicitud de venta a la lista de operaciones pendientes del broker
-          */
-
-    public void añadePeticionVentaALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, double numTitulosAVender) {
+         */
+    public void añadePeticionVentaALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, String nombreEmpresa, int numTitulosAVender) {
 
         Mensaje peticionVenta = new MensajeVenta(idOperacion,nombreCliente,dniCliente,nombreEmpresa,TipoOperacion.VENTA,numTitulosAVender);
         operacionesPendientes.add(peticionVenta);
 
     }
 
-     /*Nombre método: añadePeticionActualizacionALaListaDeOperacionesPendientesDelBorker
+         /*Nombre método: añadePeticionActualizacionALaListaDeOperacionesPendientesDelBorker
           Entradas: int idOperacion,String nombreCliente , String dniCliente)
           Salidas: nada
           Excepciones:
           Descripción: Añade una solicitud de actualizacion a la lista de operaciones pendientes del broker
-          */
-
+         */
     public void añadePeticionActualizacionALaListaDeOperacionesPendientesDelBorker(int idOperacion,String nombreCliente , String dniCliente, HashSet<Empresa> empresasQueSeQuierenActualizar) {
-
-        Mensaje peticionActualizacion = new MensajeActualizacion(idOperacion,nombreCliente,dniCliente, TipoOperacion.ACTUALIZACION, empresasQueSeQuierenActualizar);
+        Calendar fecha = Calendar.getInstance();
+        Mensaje peticionActualizacion = new MensajeActualizacion(idOperacion, Utilidades.formatoFecha(fecha),nombreCliente,dniCliente, TipoOperacion.ACTUALIZACION, empresasQueSeQuierenActualizar);
         operacionesPendientes.add(peticionActualizacion);
     }
 
-    /*Nombre método: muestraOperacionesPendientes
+        /*Nombre método: muestraOperacionesPendientes
           Entradas: nada
           Salidas: nada
           Excepciones:
           Descripción: Muestra las operaciones pendientes
-          */
-
+        */
     public void muestraOperacionesPendientes(){
 
         if(operacionesPendientes.size()==0){
@@ -646,8 +596,7 @@ public class AgenteDeInversiones extends Persona {
         }
     }
 
-//ZONA DE METODOS PUBLICOS
-
+    //ZONA DE METODOS PUBLICOS
 }
 
 

@@ -1,13 +1,9 @@
 package Banco;
 
-
 import ExcepcionesPropias.*;
+import General.Utilidades;
 import Mensajes.*;
-import Utilidades.Input;
-import Utilidades.Output;
 import Bolsa.*;
-
-
 import java.io.*;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,63 +18,45 @@ public class Banco {
     //FIN ZONA VARIABLES
 
     //ZONA CONSTRUCTORES
-    //constructor que solo recibe el nombre del banco
     public Banco(String nombre) {
         this.nombre = nombre;
         this.clientes = new HashSet<Cliente>();
         this.idOperacion = 0;
     }
-
-    //constructor que solo recibe el nombre del banco y un cliente
     public Banco(String nombre, Cliente cliente) {
         this.nombre = nombre;
         this.clientes = new HashSet<Cliente>();
         this.clientes.add(cliente);
     }
-
-    //constructor que solo recibe el nombre del banco y un Agente de inversiones
     public Banco(String nombre, AgenteDeInversiones broker) {
         this.nombre = nombre;
         this.broker = broker;
         this.clientes = new HashSet<Cliente>();
     }
-
-    //constructor que solo recibe el nombre del banco y un Agente de inversiones y una lista de clientes
     public Banco(String nombre, AgenteDeInversiones broker, HashSet<Cliente> clientes) {
         this.nombre = nombre;
         this.broker = broker;
         this.clientes = new HashSet<Cliente>();
         this.clientes.addAll(clientes);
     }
-
     //FIN ZONA CONSTRUCTORES
 
     //ZONA DE GETTERS
-
     public String getNombre() {
         return nombre;
     }
-
-    public AgenteDeInversiones getBroker() {
-        return broker;
-    }
-
     public HashSet<Cliente> getClientes() {
         return clientes;
     }
-
     //FIN ZONA GETTERS
 
     //ZONA DE SETTERS
-
     public void setBroker(AgenteDeInversiones broker) {
         this.broker = broker;
     }
-
     public void setGestor(AgenteDeInversiones gestor) {
         this.gestor = gestor;
     }
-
     //FIN ZONA SETTERS
 
     //ZONA DE METODOS PUBLICOS
@@ -93,18 +71,6 @@ public class Banco {
         if (!this.clientes.add(cliente)) {
             System.out.println("El cliente que ha intendado añadir YA esta presente en el banco");
         } else System.out.println("Cliente añadido con exito!");
-    }
-
-    /*Nombre método: addClientes
-      Entradas: Objeto de tipo HashSet<Cliente>, es decir, una lista de Clientes
-      Salidas: nada
-      Excepciones: ninguna
-      Descripción: añade una lista de clientes a la lista solo si ningun de los clientes que se intentan añadir estaban ya en la lista
-      */
-    public void addClientes(HashSet<Cliente> cliente1) {
-        if (!clientes.addAll(cliente1))
-            System.out.println("Las empresas que ha intendado añadir, tiene alguna/s empresa que ya esta presente en la bolsa");
-        else System.out.println("Empresas añadidas con exito!");
     }
 
     /*Nombre método: removeClientes
@@ -140,10 +106,9 @@ public class Banco {
       Excepciones: nada
       Descripción: Serializa la informacion de los clientes que hay en el banco y los transforma en un fichero binario
       */
+    public void copiaSeguridadBanco(String path, Utilidades serializa) throws IOException {
 
-    public void copiaSeguridadBanco(String path, Output serializa) throws IOException {
-
-        serializa.abrir(path);
+        serializa.abrirOut(path);
         Iterator iterador = clientes.iterator();
         System.out.println("Copiando...");
         System.out.println();
@@ -151,7 +116,7 @@ public class Banco {
             Cliente cliente = (Cliente) iterador.next();
             serializa.escribirCliente(cliente);
         }
-        serializa.cerrar();
+        serializa.cerrarOut();
     }
 
     /*Nombre método: restaurarCopiaSeguridadClientes
@@ -160,9 +125,9 @@ public class Banco {
       Excepciones: IOException y ClassNotFoundException
       Descripción: Deserializa la información de las empresas presentes en la bolsa y las uarda en disco
       */
-    public void restaurarCopiaSeguridadClientes(String path, Input deserializa) throws IOException, ClassNotFoundException {
+    public void restaurarCopiaSeguridadClientes(String path, Utilidades deserializa) throws ClassCastException,IOException, ClassNotFoundException {
         Cliente cliente;
-        deserializa.abrir(path);
+        deserializa.abrirIn(path);
         System.out.println("Restaurando...");
         System.out.println();
         clientes.clear();//borramos toda la lista antes de cargar desde disco la nueva lista de la que dispondremos
@@ -172,7 +137,7 @@ public class Banco {
                 cliente = deserializa.leerCliente();
                 clientes.add(cliente);
             } while (cliente != null);
-            deserializa.cerrar();
+            deserializa.cerrarIn();
             clientes.remove(null);
         } catch (InterruptedIOException iioe) {
             System.out.println("EEROR:Interrupcion de tipo InterruptedIOException");
@@ -199,6 +164,11 @@ public class Banco {
             throw new IOException();
 
         }
+
+        catch (ClassCastException cce) {
+            throw cce;
+
+        }
     }
 
     /*Nombre método: promocionAClientePremium
@@ -207,10 +177,9 @@ public class Banco {
       Excepciones:
       Descripción: Promociona a un cleinte ya existente a premium asignandole a un gestor
       */
-    public void promocionAClientePremium(String dniCliente) throws BancoNoTieneGestor {
+    public void promocionAClientePremium(String dniCliente) {
         boolean encontrado;
         boolean noExiste;
-        try {
             Cliente cliente = new Cliente("sdsd", dniCliente, 32); //creamos este objeto auxiliar para comparar con los elemntos de la lista de clientes
 
             if (this.broker == null) { // miro a ver si el banco tiene un gestor asociado
@@ -237,21 +206,15 @@ public class Banco {
                 } else if (noExiste) {
                     System.out.println("El cliente con dni: " + dniCliente + " no existe");
                 }
-
             }
-        } catch (NullPointerException bancoNotieneGestor) {
-            throw new BancoNoTieneGestor("Se ha intentado promocionar a un cliente a premium sin que el banco tenga un gestor de inversiones");
-        }
-
-
     }
 
     /*Nombre método: recomendacionDeInversion
-          Entradas: dni cliente
-          Salidas: String nombreEmpresa
-          Excepciones:
-          Descripción: Compara la valoración de todas las empresas y selecciona la que mejor desempeño ha tenido
-          */
+      Entradas: dni cliente
+      Salidas: String nombreEmpresa
+      Excepciones:
+      Descripción: Compara la valoración de todas las empresas y selecciona la que mejor desempeño ha tenido
+      */
     public void recomendacionDeInversion(String dniCliente) {
         Cliente cliente = new Cliente("Markos", dniCliente, 10);
         boolean encontrado = false;
@@ -283,15 +246,12 @@ public class Banco {
     }
 
 
-//ZONA DE OPERACIONES
-
     /*Nombre método: compraAcciones
       Entradas: String dniCliente, String nombreEmpresa, float cantidadMaxAInvertir
       Salidas: nada
       Excepciones:
       Descripción: Envia al broker las peticiones de venta si todo el cliente cumple los requisitos(cliente pretenece al banco, el saldo del cleinte es superior a la cantidad que desea invertir).
       */
-
     public void compraAcciones(String dniCliente, String nombreEmpresa, double cantidadMaxAInvertir) {
         System.out.println();
         System.out.println(" ----------------------- ZONA BANCO -----------------------");
@@ -347,8 +307,7 @@ public class Banco {
       Excepciones:
       Descripción: Envia al broker las peticiones de venta si todo el cliente cumple los requisitos(cliente pretenece al banco, tieen acciones de la empresa que intenta vender y el numero de titulos que quiere vender es inferior o igual al numero de titulos que posee en su paquete de acciones).
       */
-
-    public void ventaAcciones(String dniCliente, String nombreEmpresa, double numTitulosAVender) {
+    public void ventaAcciones(String dniCliente, String nombreEmpresa, int numTitulosAVender) {
         System.out.println();
         System.out.println(" ----------------------- ZONA BANCO -----------------------");
         System.out.println();
@@ -412,7 +371,6 @@ public class Banco {
       Excepciones:
       Descripción: Envia al broker las peticiones de actualizacion si todo el cliente cumple los requisitos(cliente pretenece al banco).
       */
-
     public void actualizacionDeAccicones(String dniCliente) {
         System.out.println();
         System.out.println(" ----------------------- ZONA BANCO -----------------------");
@@ -433,16 +391,26 @@ public class Banco {
 
             if (cliente.getPaquetesAcciones().size() == 0) {
                 System.out.println(" El cliente con dni: " + dniCliente + " no tiene ningun paquete de acciones que actualizar");
-            } else {
+            }
+
+            else {
                 Iterator iterador1 = cliente.getPaquetesAcciones().iterator(); // creo un objeto Iterator para recorrer la coleccion
                 HashSet<Empresa> empresasQueSeQuierenActualizar = new HashSet<Empresa>();
-                Empresa empresa = new Empresa();
+
                 while (iterador1.hasNext()) {//recorro los paquetes de acciones del cliente y cojo solo los nombres de los paquetes de acciones que posee
                     PaqueteDeAcciones paqueteDeAcciones = (PaqueteDeAcciones) iterador1.next();
+                    Empresa empresa = new Empresa(paqueteDeAcciones.getNombreEmpresa(),paqueteDeAcciones.getValorActualTitulo());
+
+                    System.out.println(paqueteDeAcciones.getNombreEmpresa());
+
                     empresa.setNombre(paqueteDeAcciones.getNombreEmpresa());
-                    empresa.setValorTituloActual(paqueteDeAcciones.getValorActualTitulo());
-                    empresa.setValorTituloPrevio(0);// -2 es un valor que no refleja nada
+
+                    System.out.println(empresa.getNombre());
+
                     empresasQueSeQuierenActualizar.add(empresa);
+
+                    System.out.println(empresasQueSeQuierenActualizar.toString());
+
                 }
                 System.out.println(" El banco esta almacenando la petición de actualización en la lista de peticiones pendientes del borker...");
                 System.out.println();
@@ -453,8 +421,9 @@ public class Banco {
                 System.out.println(" ---------------- Nombre Cliente = " + cliente.getNombre());
                 System.out.println(" ---------------- DNI Cliente = " + dniCliente);
                 System.out.println(" ---------------- Paquetes de las empresas que se quieren actualizar = ");
-                System.out.println(" ---------------------- " + empresasQueSeQuierenActualizar.toString());
+                System.out.println("\n"+ empresasQueSeQuierenActualizar.toString());
                 broker.añadePeticionActualizacionALaListaDeOperacionesPendientesDelBorker(idOperacion, cliente.getNombre(), dniCliente, empresasQueSeQuierenActualizar);
+                System.out.println();
                 System.out.println(" El banco ha terminado de almacenar la petición de actualización en la lista de peticiones pendientes del borker");
 
             }
@@ -467,7 +436,6 @@ public class Banco {
       Excepciones:
       Descripción: A partir de los resultados de las opraciones almacenadas en la lista opracionesRealizadas del broker tenemos que actualizar el/los paquete/s de acciones del cliente
       */
-
     public void actualizaEstadoClientes() {
 
         System.out.println();
@@ -699,9 +667,16 @@ public class Banco {
                                 System.out.println(" ---------------- Número de acciones = " + paqueteDeAccionesAsociadoOperacion.getNumTitulos());
                                 System.out.println(" ---------------- Precio acción = " + paqueteDeAccionesAsociadoOperacion.getValorActualTitulo());
 
+                                if (paqueteDeAccionesAsociadoOperacion.getNumTitulos()==0){
+                                    System.out.println();
+                                    System.out.println(" Dado que el valor del paquete es 0 porque el cliente tiene 0 acciones de la empresa: "+ paqueteDeAccionesAsociadoOperacion.getNombreEmpresa()+", entonces se procede a borrar el paquete de acciones de la empresa: "+paqueteDeAccionesAsociadoOperacion.getNombreEmpresa() +"asociado a la carterara inversiones del cliente");
+                                    System.out.println();
+                                    clienteAsociadoOperacion.getPaquetesAcciones().remove(paqueteDeAccionesAsociadoOperacion);
+                                }
                             }
                         }
                     }
+                    System.out.println();
                     System.out.println("-------------- FIN ACTUALIZANDO DE DATOS (SALDO Y PAQUETE DE ACCIONES) DEL CLIENTE CON DNI: " + mensajeRespouestaVenta.getDniCliente() + " ASOCIADO A LA OPERACIÓN DE VENTA CON ID: " + mensajeRespouestaVenta.getIdOperacion() + "-------------");
                     System.out.println();
                     System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
@@ -820,10 +795,7 @@ public class Banco {
 
 
     }
-
-    //FIN ZONA DE OPERACIONES
-
-
+    //FIN ZONA DE METODOS PUBLICOS
 }
 
 

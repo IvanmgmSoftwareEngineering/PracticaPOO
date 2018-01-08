@@ -3,7 +3,6 @@ package General;
 import Banco.Cliente;
 import Bolsa.Empresa;
 import ExcepcionesPropias.*;
-
 import java.util.InputMismatchException;
 
 public class InterfazDeUsuario {
@@ -22,59 +21,47 @@ public class InterfazDeUsuario {
     private double valorActualEmpresa;
     private String path;
     private double cantidadMaxAInvertir;
-    private double numTitulosAVender;
-    // -FIN VARIABLES
+    private int numTitulosAVender;
+    //FIN VARIABLES
 
     //ESPACIO RESERVADO PARA CONSTRUCTORES
-    //constructor por defecto
     public InterfazDeUsuario() {
     }
-
     //constructor que recibe un objeto tipo escaner como parametro de entrada
     public InterfazDeUsuario(Escaner leeTeclado) {
         this.leeTeclado = leeTeclado;
     }
-
-    // -FIN CONSTRUCTORES
+    //FIN CONSTRUCTORES
 
     //ESPACIO RESERVADO PARA GETTERS
     public String getEleccion() {
         return eleccion;
     }
-
     public String getNombreEmpresa() {
         return nombreEmpresa;
     }
-
     public double getValorActualEmpresa() {
         return valorActualEmpresa;
     }
-
     public String getNombrePersona() {
         return nombrePersona;
     }
-
     public String getDni() {
         return dni;
     }
-
     public double getSaldo() {
         return saldo;
     }
-
     public String getPath() {
         return path;
     }
-
     public double getCantidadMaxAInvertir() {
         return cantidadMaxAInvertir;
     }
-
-    public double getNumTitulosAVender() {
+    public int getNumTitulosAVender() {
         return numTitulosAVender;
     }
-
-    // -FIN GETTERS
+    //FIN GETTERS
 
     // ESPACIO RESERVADO PARA GETTERS DERIVADOS O "CREADORES"
     public Cliente crearCliente() {
@@ -86,8 +73,7 @@ public class InterfazDeUsuario {
         Empresa e1 = new Empresa(this.getNombreEmpresa(),this.getValorActualEmpresa());
         return e1;
     }
-
-    //-FIN CREADORES
+    //FIN CREADORES
 
     //ESPACIO RESERVADO PARA METODOS PRIVADOS DE LA CLASE
 
@@ -135,10 +121,11 @@ public class InterfazDeUsuario {
                     }
                 }
                 } else if (opcion.equals("opcionMenu")) {
-                    while (intentos > 1) {
+                    while (intentos > 0) {
+                        intentos = intentos - 1;
                         try {
                             if (datos.length() > 2) {//el numero e caracteres es distinto de 1 y 2
-                                intentos = intentos - 1;
+
                                 System.out.println();
                                 System.out.println("ERROR: La opcion debe contener 1 o 2 caracteres numéricos como máximo.");
                                 System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
@@ -148,7 +135,6 @@ public class InterfazDeUsuario {
                                 if (datos.length() == 1) {
                                     letraMenu = datos.charAt(0);
                                     if (!(letraMenu >= 48 && letraMenu <= 57)) {
-                                        intentos = intentos - 1;
                                         System.out.println();
                                         System.out.println("ERROR: La opcion debe contener solo caracteres numéricos válidos 0-18.");
                                         System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
@@ -160,7 +146,6 @@ public class InterfazDeUsuario {
                                     letraMenu = datos.charAt(0);
                                     letraMenu1 = datos.charAt(0);
                                     if (!(letraMenu >= 48 && letraMenu <= 57) || !(letraMenu1 >= 48 && letraMenu1 <= 57)) {
-                                        intentos = intentos - 1;
                                         System.out.println();
                                         System.out.println("ERROR: Alguno de los caracteres que ha introducido no es numérico");
                                         System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
@@ -170,9 +155,8 @@ public class InterfazDeUsuario {
                                         int aux;
                                         aux = Integer.parseInt(datos);
                                         if (aux != 10 && aux != 11 && aux != 12 && aux != 13 && aux != 14 && aux != 15 && aux != 16 && aux != 17 && aux != 18) {
-                                            intentos = intentos - 1;
                                             System.out.println();
-                                            System.out.println("ERROR: El numero introducido debes tesar dentro del rango 0-18");
+                                            System.out.println("ERROR: El numero introducido debes estar dentro del rango 0-18");
                                             System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
                                             System.out.print("Inserte la opción deseada: ");
                                             datos = leeTeclado.leeDatos();
@@ -189,6 +173,7 @@ public class InterfazDeUsuario {
                             System.out.print("Inserte la opción deseada: ");
                             datos = leeTeclado.leeDatos();
                         }
+
                     }
 
             } else if (opcion.equals("opcionDNI")) {
@@ -227,7 +212,7 @@ public class InterfazDeUsuario {
                             System.out.println("El nombre debe contener caracteres válidos; no números, no acentos, solo letras desde a-z o A-Z y símbolo de puntuación '.'");
                             intentos = intentos - 1;
                             System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
-                            System.out.print("Nombre empresa: ");
+                            System.out.print("Nombre fichero: ");
                             datos = leeTeclado.leeDatos();
 
                         } else {
@@ -250,20 +235,34 @@ public class InterfazDeUsuario {
       Excepciones: IntentsLimitAchieveException
       Descripción: utiliza el objeto escaner de la clase para leer de teclado un número. Si el número es no positivo y se superan el límite de intentos se lanza una excepción.
       */
-    private float leeNumeroDecimalTeclado() throws IntentsLimitAchieveException {
-            float numero;
+    private double leeNumeroDecimalTeclado() throws IntentsLimitAchieveException,NumberFormatException {
+            double numero;
             int intentos;
             intentos = INTENTOS;
-            while (intentos > 1) {
-                numero = Float.valueOf(leeTeclado.leeDatos()).floatValue();
-                if (numero <= 0) {
-                    intentos = intentos - 1;
-                    System.out.println("El numero debe ser mayor que cero;  no números negativos ni cero");
-                    System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
-                    System.out.print("Inserte valor: ");
 
+            while (intentos > 0) {
+                try {
+                    numero = Double.valueOf(leeTeclado.leeDatos()).doubleValue();
+                    if (numero <= 0) {
+                        intentos = intentos - 1;
+                        System.out.println("El numero debe ser mayor que cero;  no números negativos ni cero");
+                        System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                        System.out.print("Inserte valor: ");
+
+                    }
+                    return numero;
                 }
-                return numero;
+                catch(NumberFormatException nfe){
+                    if (intentos > 1) {
+                        intentos = intentos - 1;
+                        System.out.println("Debe introducir un caracter numérico");
+                        System.out.println("Vuelva a intentarlo. Le quedan " + intentos + " intentos para hacerlo bien.");
+                        System.out.print("Inserte valor: ");
+                    }
+                    else {
+                        throw new IntentsLimitAchieveException("Se ha superado el límite de veces que el usuario puede introducir una opción no válida");
+                    }
+                }
             }
 
             throw new IntentsLimitAchieveException("Se ha superado el límite de veces que el usuario puede introducir una opción no válida");
@@ -276,7 +275,7 @@ public class InterfazDeUsuario {
       Excepciones: IntentsLimitAchieveException
       Descripción: utiliza el objeto escaner de la clase para leer de teclado un número. Si el número es no positivo y se superan el límite de intentos se lanza una excepción.
       */
-    private float leeNumeroEnteroTeclado() throws IntentsLimitAchieveException {
+    private int leeNumeroEnteroTeclado() throws IntentsLimitAchieveException {
         float numero;
         int intentos;
         intentos = INTENTOS;
@@ -345,30 +344,21 @@ public class InterfazDeUsuario {
         System.out.println("18.- Ejecutar operaciones pendientes");
         System.out.println("**************************************************");
     }
-    //-FIN METODOS PRIVADOS
+    //FIN METODOS PRIVADOS
 
 
-    //ESPACIO RESERVADO PARA METODOS PUBLICOS DE LA CLASE
+    //ESPACIO RESERVADO PARA METODOS PUBLICOS
 
     /*Nombre método: muestraMenu
       Entradas: ninguna
       Salidas: ninguna
-      Excepciones: ClassCastException,IntentsLimitAchieveException,ObjetoEscannerNoPasadoConstructorInterfazDeUsuario
+      Excepciones: ClassCastException,IntentsLimitAchieveException
       Descripción: Muestra el menu y pide al usuario ingresar un valor por teclado que se corresponda con una de las opciones del menu. Si esa entrada no es una de las opciones del menu o se supera el limite de intentos entonces se lanza excepcion.
       */
-    public void muestraMenu() throws ClassCastException, IntentsLimitAchieveException, ObjetoEscannerNoPasadoConstructorInterfazDeUsuario {
-        int intentos;
-        intentos = INTENTOS;
+    public void muestraMenu() throws ClassCastException, IntentsLimitAchieveException {
         this.menu();
         System.out.print(" Inserte la opción deseada: ");
-        try {
-            eleccion = this.leeCadenaTextoTeclado("opcionMenu");
-
-        }catch (NullPointerException e) {
-            throw new ObjetoEscannerNoPasadoConstructorInterfazDeUsuario(" La clase 'Interfaz Ususario' debe recibir un objeto de tipo 'Escanner' para funcionar correctamente");
-        } catch (InputMismatchException e1){
-
-        }
+        eleccion = this.leeCadenaTextoTeclado("opcionMenu");
     }
 
     /*Nombre método: muestraClientesBanco (OPCION 1)
@@ -610,7 +600,7 @@ public class InterfazDeUsuario {
         this.nombreEmpresa = this.leeCadenaTextoTeclado("opcionNombre");
         System.out.println();
         System.out.print("      Cantidad MAX. que desea invertir: ");
-        this.cantidadMaxAInvertir = this.leeNumeroEnteroTeclado();
+        this.cantidadMaxAInvertir = this.leeNumeroDecimalTeclado();
     }
 
     /*Nombre método: solicitaVentaDeAcciones(OPCION 15)
@@ -676,17 +666,13 @@ public class InterfazDeUsuario {
     public void ejecutaPeticionesDeAcciones(){
         System.out.println();
         System.out.println();
-        System.out.println(" ---------- OPCIÓN 18 SELECCIONADA: IMPRIMIR OPERACIONES PENDIENTES ---------");
+        System.out.println(" ---------- OPCIÓN 18 SELECCIONADA: EJECUTAR OPERACIONES PENDIENTES ---------");
         System.out.println();
         System.out.println(" Ejecutando...");
         System.out.println();
     }
 
-
-
-
-
-
+    //ZONA DE METODOS PUBLICOS
 }
 
 
