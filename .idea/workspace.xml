@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2db106ef-d766-4cc8-86eb-4411bf9e799a" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/Banco/TipoAgente.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/clientes.ser" afterPath="$PROJECT_DIR$/clientes.ser" />
-      <change beforePath="$PROJECT_DIR$/empresas.ser" afterPath="$PROJECT_DIR$/empresas.ser" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Banco/AgenteDeInversiones.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Banco/AgenteDeInversiones.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Banco/Banco.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Banco/Banco.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Banco/Cliente.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Banco/Cliente.class" />
@@ -13,8 +10,6 @@
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Banco/PaqueteDeAcciones.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Banco/PaqueteDeAcciones.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Bolsa/BolsaDeValores.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Bolsa/BolsaDeValores.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Bolsa/Empresa.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Bolsa/Empresa.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/Simulador/ExcepcionesPropias/BancoNoTieneGestor.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/out/production/Simulador/ExcepcionesPropias/ObjetoInterfazDeUsuarioNoPasadoConstructorSimulador.class" afterPath="" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/General/InterfazDeUsuario.class" afterPath="$PROJECT_DIR$/out/production/Simulador/General/InterfazDeUsuario.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/General/Simulador.class" afterPath="$PROJECT_DIR$/out/production/Simulador/General/Simulador.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/General/Utilidades.class" afterPath="$PROJECT_DIR$/out/production/Simulador/General/Utilidades.class" />
@@ -24,34 +19,7 @@
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Mensajes/MensajeRespuestaCompra.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Mensajes/MensajeRespuestaCompra.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Mensajes/MensajeRespuestaVenta.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Mensajes/MensajeRespuestaVenta.class" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/Mensajes/MensajeVenta.class" afterPath="$PROJECT_DIR$/out/production/Simulador/Mensajes/MensajeVenta.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/Simulador/Utilidades/Input.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/out/production/Simulador/Utilidades/Output.class" afterPath="" />
       <change beforePath="$PROJECT_DIR$/out/production/Simulador/com/company/Main.class" afterPath="$PROJECT_DIR$/out/production/Simulador/com/company/Main.class" />
-      <change beforePath="$PROJECT_DIR$/src/Banco/AgenteDeInversiones.java" afterPath="$PROJECT_DIR$/src/Banco/AgenteDeInversiones.java" />
-      <change beforePath="$PROJECT_DIR$/src/Banco/Banco.java" afterPath="$PROJECT_DIR$/src/Banco/Banco.java" />
-      <change beforePath="$PROJECT_DIR$/src/Banco/Cliente.java" afterPath="$PROJECT_DIR$/src/Banco/Cliente.java" />
-      <change beforePath="$PROJECT_DIR$/src/Banco/ClientePremium.java" afterPath="$PROJECT_DIR$/src/Banco/ClientePremium.java" />
-      <change beforePath="$PROJECT_DIR$/src/Banco/PaqueteDeAcciones.java" afterPath="$PROJECT_DIR$/src/Banco/PaqueteDeAcciones.java" />
-      <change beforePath="$PROJECT_DIR$/src/Banco/Persona.java" afterPath="$PROJECT_DIR$/src/Banco/Persona.java" />
-      <change beforePath="$PROJECT_DIR$/src/Bolsa/BolsaDeValores.java" afterPath="$PROJECT_DIR$/src/Bolsa/BolsaDeValores.java" />
-      <change beforePath="$PROJECT_DIR$/src/Bolsa/Empresa.java" afterPath="$PROJECT_DIR$/src/Bolsa/Empresa.java" />
-      <change beforePath="$PROJECT_DIR$/src/ExcepcionesPropias/BancoNoTieneGestor.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/ExcepcionesPropias/ObjetoEscannerNoPasadoConstructorInterfazDeUsuario.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/ExcepcionesPropias/ObjetoInterfazDeUsuarioNoPasadoConstructorSimulador.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/General/Escaner.java" afterPath="$PROJECT_DIR$/src/General/Escaner.java" />
-      <change beforePath="$PROJECT_DIR$/src/General/InterfazDeUsuario.java" afterPath="$PROJECT_DIR$/src/General/InterfazDeUsuario.java" />
-      <change beforePath="$PROJECT_DIR$/src/General/Simulador.java" afterPath="$PROJECT_DIR$/src/General/Simulador.java" />
-      <change beforePath="$PROJECT_DIR$/src/General/Utilidades.java" afterPath="$PROJECT_DIR$/src/General/Utilidades.java" />
-      <change beforePath="$PROJECT_DIR$/src/Mensajes/Mensaje.java" afterPath="$PROJECT_DIR$/src/Mensajes/Mensaje.java" />
-      <change beforePath="$PROJECT_DIR$/src/Mensajes/MensajeActualizacion.java" afterPath="$PROJECT_DIR$/src/Mensajes/MensajeActualizacion.java" />
-      <change beforePath="$PROJECT_DIR$/src/Mensajes/MensajeCompra.java" afterPath="$PROJECT_DIR$/src/Mensajes/MensajeCompra.java" />
-      <change beforePath="$PROJECT_DIR$/src/Mensajes/MensajeRespuestaActualizacion.java" afterPath="$PROJECT_DIR$/src/Mensajes/MensajeRespuestaActualizacion.java" />
-      <change beforePath="$PROJECT_DIR$/src/Mensajes/MensajeRespuestaCompra.java" afterPath="$PROJECT_DIR$/src/Mensajes/MensajeRespuestaCompra.java" />
-      <change beforePath="$PROJECT_DIR$/src/Mensajes/MensajeRespuestaVenta.java" afterPath="$PROJECT_DIR$/src/Mensajes/MensajeRespuestaVenta.java" />
-      <change beforePath="$PROJECT_DIR$/src/Mensajes/MensajeVenta.java" afterPath="$PROJECT_DIR$/src/Mensajes/MensajeVenta.java" />
-      <change beforePath="$PROJECT_DIR$/src/Utilidades/Input.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Utilidades/Output.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Main.java" afterPath="$PROJECT_DIR$/src/com/company/Main.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -401,7 +369,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515036346002</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="TERMINADA!!!;)">
+      <created>1515387705143</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1515387705144</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView">
