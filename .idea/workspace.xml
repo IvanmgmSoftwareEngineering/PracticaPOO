@@ -45,10 +45,10 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="Ivan" />
         <option value="Ivan, Santiago y Markos" />
         <option value="ivan" />
         <option value="MARKOS E IVÁN" />
-        <option value="Ivan" />
         <option value="IvanmgmSoftwareEngineering &lt;ivanmgm88@gmail.com&gt;" />
       </list>
     </option>
@@ -390,7 +390,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515387737085</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="TERMINADA!!!;)">
+      <created>1515387781829</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1515387781829</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TodoView">
